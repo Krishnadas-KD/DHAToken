@@ -18,7 +18,7 @@ class TokenDetails extends Model
         // Listen for the creating event and set the created_date attribute
         static::creating(function ($tokenDetails) {
             $tokenDetails->token_status = 'Pending Registration';
-            $tokenDetails->post_date = now()->addHours(9)->toDateString(); 
+            $tokenDetails->post_date = now()->addHours(0)->toDateString(); 
         });
     }
     public function services()

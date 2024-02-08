@@ -17,15 +17,11 @@ class TokenController extends Controller
         $data = ['cardsData' => $tokenDetails];
         return view('token-genrate', $data);
     }
-    public function token_index2()
-    {
-        $tokenDetails = TokenDetails::where('closed', '=', '0')->get();
-        $data = ['cardsData' => $tokenDetails];
-        return view('token-genrate-test', $data);
-    }
-   
+
     public function token_create(Request $request)
     {
+        $user = Auth::user();
+
         $type=request('type');
         $section=request('section');
         $qry = TokenSeries::where('type', $type)
@@ -41,12 +37,11 @@ class TokenController extends Controller
         }
 
         $token_name=$next_series;
-        $crt_user="test@gmail.com";
         $customer_token = TokenDetails::create([
             'type' => $type,
             'token_name' => $token_name,
             'section' => $section,
-            'crt_user' => $crt_user,
+            'crt_user' => $user->email,
             'is_printed'=>true,
             'last_print'=>Carbon::now(),
             'print_count'=>'1'

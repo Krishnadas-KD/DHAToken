@@ -34,6 +34,21 @@
           margin-left: -50px;
           color:white;
       }
+ /* Add this CSS for the profile icon */
+ /* Add this style to ensure the image doesn't overflow */
+ .profile-dropdown-toggle {
+        overflow: hidden;
+        border-radius: 50%;
+        width: 40px; /* Adjust the width as needed */
+        height: 40px; /* Adjust the height as needed */
+        cursor: pointer;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
     </style>
     @yield('style-css')
@@ -44,22 +59,40 @@
       <h5 class="r-center">Please wait...</h5>
     </div>
     <nav class="t-header" id="header-div">
-      
-      <div class="t-header-content-wrapper">
-        <div class="t-header-content">
-          <button class="t-header-toggler t-header-mobile-toggler d-block d-lg-none">
-            <i class="mdi mdi-menu"></i>
-          </button>
-          <h2 style="color: black">Dubai Health</h2>
+        <div class="t-header-content-wrapper">
+            <div class="t-header-content">
+                <button class="t-header-toggler t-header-mobile-toggler d-block d-lg-none">
+                    <i class="mdi mdi-menu"></i>
+                </button>
+                <h2 style="color: black">Dubai Health</h2>
+            </div>
 
+            <!-- Profile icon with dropdown menu -->
+            <div class="t-header-profile">
+                <div class="dropdown">
+                    <div class="profile-dropdown-toggle" id="profileDropdown" data-toggle="dropdown"  alt="{{ auth()->user()->email }}" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ asset('assets/img/male-user.png') }}" alt="{{ auth()->user()->email }}" class="profile-image">
+                    </div>
+                    <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                    @if(auth()->user()->is_admin == 1)
+                        <a class="dropdown-item" href="{{ url('/display') }}">Switch User</a>
+                    
+                        @endif
+          
+                        <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                    </div>
+                </div>
+            </div>
         </div>
+    </nav>
+
       </div>
     </nav>
     <!-- partial -->
     <div class="page-body">
-      <div class="sidebar" style="background:#e1fcff">
+      <div class="sidebar" style="background:#fff">
         <ul class="navigation-menu">
-          <li class="nav-category-divider" style="background:transparent;color:#525c5d;font-size:20px">Menu</li>
+          <li class="nav-category-divider" style="background:#fff;color:#525c5d;font-size:20px">Menu</li>
           @if(auth()->user()->is_admin == 1)
              <li>
             <a href="/home">
@@ -106,7 +139,7 @@
               <span class="link-title">Report</span>
               <i class="mdi mdi-book link-icon"></i>
             </a>
-             <ul class="collapse navigation-submenu"  style="background:#e1fcff;" id="ui-elements">
+             <ul class="collapse navigation-submenu"  style="background:#fff;" id="ui-elements">
                   <li>
                     <a href="{{ route('token_list_home')}}">
                       <i class="mdi mdi-history link-icon"></i>
@@ -119,15 +152,17 @@
                       <span class="link-title" style="color:#000">Token Count</span>
                     </a>
                   </li>
+                  <li>
+                    <a href="{{ route('token_count_hour_home')}}">
+                      <i class="mdi  mdi-timelapse link-icon"></i>
+                      <span class="link-title" style="color:#000">Token Hour Wise Count</span>
+                    </a>
+                  </li>
+
                   </ul>
           </li>
          
-          <li>
-            <a href="{{ route('logout') }}">
-              <span class="link-title">Logout</span>
-              <i class="mdi mdi-logout link-icon"></i>
-            </a>
-          </li>
+
           @endif
 
           @if(auth()->user()->type == 'Counter')
@@ -137,12 +172,7 @@
               <i class="mdi mdi-gauge link-icon"></i>
             </a>
           </li>
-          <li>
-            <a href="{{ route('logout') }}">
-              <span class="link-title">Logout</span>
-              <i class="mdi mdi-logout link-icon"></i>
-            </a>
-          </li>
+
           @endif
 
           @if(auth()->user()->type == 'Token')
@@ -152,12 +182,7 @@
               <i class="mdi mdi-ticket-account link-icon"></i>
             </a>
           </li>
-          <li>
-            <a href="{{ route('logout') }}">
-              <span class="link-title">Logout</span>
-              <i class="mdi mdi-logout link-icon"></i>
-            </a>
-          </li>
+
           @endif
 
           
@@ -187,12 +212,6 @@
                     </a>
                   </li>
                   </ul>
-          </li>
-          <li>
-            <a href="{{ route('logout') }}">
-              <span class="link-title">Logout</span>
-              <i class="mdi mdi-logout link-icon"></i>
-            </a>
           </li>
           @endif
           

@@ -89,7 +89,7 @@
                             <div class="card" value="{{$card['id']}}" name='retoken'>
                                 <div class="card-body">
                                     <h3 style="text-align:center"><b>Token:</b> {{ $card['token_name'] }}</h3>
-                                    <p style="text-align:left;font-size:15px"><b>Time:</b> {{ \Carbon\Carbon::parse($card['created_at'])->format('Y-m-d H:i') }}</p>
+                                    <p style="text-align:left;font-size:15px"><b>Time: </b> {{ \Carbon\Carbon::parse($card['created_at'])->format('Y-m-d H:i') }}</p>
                                     <p style="text-align:left;font-size:15px"><b>Type:</b> {{ $card['section'] }}</p>
                                     <p style="text-align:center;font-size:17px;"> <b> {{ $card['token_status'] }} </b> </p>
                                      
@@ -210,6 +210,7 @@
                     if(response.data.customer_token!=null)
                     {   
                         var dateString = new Date(response.data.customer_token.created_at);
+                        dateString = moment(dateString).add(4, 'hours'); 
                         var formattedDate = moment(dateString).format('YYYY-MM-DD   h:mm:ss A');
                         console.log(response.data.customer_token);
                         $('#created_at').text(' DATE & TIME:'+formattedDate);
@@ -255,6 +256,7 @@
                             if(response.data.customer_token!=null)
                             {   
                                 var dateString = new Date(response.data.customer_token.created_at);
+                                dateString = moment(dateString).add(4, 'hours'); 
                                 var formattedDate = moment(dateString).format('YYYY-MM-DD   h:mm:ss A');
 
                                 $('#created_at').text(' DATE & TIME:'+formattedDate);
@@ -307,6 +309,7 @@
                                 var tokenHead2 = $('<b>');
                                 var tokenHead3 = $('<b>');
                                 var dateString = new Date(cardDetails.created_at);
+                                dateString = moment(dateString).add(4, 'hours'); 
                                 var formattedDate = moment(dateString).format('YYYY-MM-DD   h:mm');
                                 cardTitle.append(tokenHead.text('Token: '),' '+cardDetails.token_name+'');
                                 tokenDetails.append(tokenHead2.text('Time: '),' '+formattedDate+'');

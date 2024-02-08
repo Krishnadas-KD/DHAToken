@@ -241,10 +241,15 @@ select,
 optgroup,
 textarea {
   margin: 0;
+
   font-family: inherit;
   font-size: inherit;
   line-height: inherit; }
 
+input,
+select{
+ border-width: 5px;
+}
 button,
 input {
   overflow: visible; }
@@ -1356,7 +1361,7 @@ pre {
   color: #6c757d;
   background-color: #f8f9fb;
   background-clip: padding-box;
-  border: 1px solid #f1f4f8;
+  border: 1px solid #000;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
   @media (prefers-reduced-motion: reduce) {
@@ -9004,14 +9009,14 @@ textarea {
 .custom-select,
 .custom-select[multiple] {
   background: #f8f9fb;
-  border-color: #f1f4f8;
+  border-color: #000;
   color: rgba(16, 16, 16, 0.8); }
   .custom-select option,
   .custom-select[multiple] option {
     background: #f8f9fb;
     color: rgba(16, 16, 16, 0.8);
     display: block;
-    border-bottom: 1px solid #f2f4f9;
+    border-bottom: 1px solid #000;
     padding: 5px 10px; }
     .custom-select option:checked,
     .custom-select[multiple] option:checked {

@@ -214,7 +214,6 @@
                         }
                         else{
                             isProcess=false;
-                            console.log(response.data);
                         }
                     },
                     error: function(xhr, status, error) {
@@ -301,8 +300,9 @@
         }
 
          function select_call(){
-                
-                $('[name=retoken]').click(function(event) {
+                if($("#empty").is(":visible"))
+                {
+                    $('[name=retoken]').click(function(event) {
                 var nameValue = $(this).attr('value');
                 var tokenName = $(this).attr('data-value');
                 
@@ -319,11 +319,7 @@
                         url: '/select-call-token/'+nameValue,
                         type: 'GET',
                         success: function(response) {
-                            alert($("#empty").text());
-                            if($("#empty").style.display === "block")
-                            {
-                                alert("ntll");
-                            }
+                           
                             refresh();
                         },
                         error: function(xhr, status, error) {
@@ -332,7 +328,9 @@
                     });
                     }
                 });
-            });
+            });    
+                }
+               
         }
 
     });

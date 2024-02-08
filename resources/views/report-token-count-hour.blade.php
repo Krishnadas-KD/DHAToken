@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="grid">
-                <p class="grid-header">Token List</p>
+                <p class="grid-header">Token Counter Hour wise</p>
                 <div class="grid-body">
                     <div class="item-wrapper">
                         <div class="row showcase_row_area">
@@ -67,6 +67,57 @@
         </div>
 
     </div>
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="grid">
+                <p class="grid-header">Token Count Counter Wise</p>
+                <div class="grid-body">
+                    <div class="item-wrapper">
+                        <div class="row showcase_row_area">
+                            <div class="col-lg-3 showcase_content_area">
+                                <div class="form-group">
+                                    <label for="my-input">FROM</label>
+                                    <input id="fromDate" class="form-control" type="date"  name="" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 showcase_content_area">
+                                <div class="form-group">
+                                    <label for="my-input">TO</label>
+                                    <input id="toDate" class="form-control" type="date" name="" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 showcase_content_area">
+                                <div class="form-group">
+                                    <label for="my-input">&nbsp;</label>
+                                    <div class="form-control btn btn-primary btn-sm has-icon" id="loadbtn" style="color: white;"><i class="mdi mdi mdi-autorenew"></i>Reload</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="table-responsive">
+                                <table id="ReportTable2" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                        
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
 </div>
 
 @stop

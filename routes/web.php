@@ -75,6 +75,11 @@ Route::group(['middleware' => ['is_admin', 'auth']], function () {
    
     Route::get('/report-token-list', [ReportsController::class, 'token_list_home'])->name('token_list_home');
     Route::post('/report-token-list', [ReportsController::class, 'token_list'])->name('token_list');
+
+    
+    Route::get('/report-token-count-hour', [ReportsController::class, 'token_count_hour_home'])->name('token_count_hour_home');
+    Route::post('/token-count-hour-counter-list', [ReportsController::class, 'token_count_hour_counter_list'])->name('token_count_hour_counter_list');
+    Route::post('/token-count-hour-total-list', [ReportsController::class, 'token_count_hour_total_list'])->name('token_count_hour_total_list');
    
      
 });
@@ -82,7 +87,6 @@ Route::group(['middleware' => ['is_admin', 'auth']], function () {
 
 Route::group(['middleware' => ['is_counter','auth'] ], function () {
     Route::get('/counter-home', [CounterUserController::class, 'counter_user_index'])->name('counter_user_index');
-   // Route::get('/counter-home', 'CounterUserController@counter_user_index');
     Route::post('/counter-refresh', [CounterUserController::class, 'counter_user_refreshcall'])->name('counter_user_refreshcall');
     Route::post('/counter-next/call', [CounterUserController::class, 'counter_token_call'])->name('counter_token_call');
     Route::get('/counter-next/{id}/{next}', [CounterUserController::class, 'token_next'])->name('token_next');
@@ -102,14 +106,19 @@ Route::group(['middleware' => ['is_token','auth']], function () {
 
 });
 
-Route::group(['middleware' => ['is_report','auth']], function () {
+Route::group(['middleware' => ['is_report','auth','web']], function () {
     Route::get('/report-home', [DashboardController::class, 'dashboard'])->name('dashboard');
-    //Route::get('/token-home', 'TokenController@token_index');
     Route::get('/report-token-count', [ReportsController::class, 'token_count_home'])->name('token_count_home');
     Route::post('/report-token-count', [ReportsController::class, 'token_count'])->name('token_count');
    
     Route::get('/report-token-list', [ReportsController::class, 'token_list_home'])->name('token_list_home');
     Route::post('/report-token-list', [ReportsController::class, 'token_list'])->name('token_list');
+
+    
+    Route::get('/report-token-count-hour', [ReportsController::class, 'token_count_hour_home'])->name('token_count_hour_home');
+    Route::post('/token-count-hour-counter-list', [ReportsController::class, 'token_count_hour_counter_list'])->name('token_count_hour_counter_list');
+    Route::post('/token-count-hour-total-list', [ReportsController::class, 'token_count_hour_total_list'])->name('token_count_hour_total_list');
+   
    
 });
 

@@ -8,8 +8,13 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TokenDetails;
 use App\Models\TokenSeries;
 use Carbon\Carbon;
+use DataTables;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DaliyCountMail;
+
 class ReportsController extends Controller
 {
+
    
     public function index()
     {
@@ -17,14 +22,16 @@ class ReportsController extends Controller
     }
     public function token_count_home(Request $request)
     {
-        $data = [
-            'user_counts' => null,
-            'users' => null
-        ];
-        return view('report-token-count', $data);
+       
+        return view('report-token-count');
     }
     public function token_count(Request $request)
     {
+        $recipientEmail = 'kkrishnadas393@gmail.com';
+        Mail::to($recipientEmail)->send(new DaliyCountMail());
+
+
+
         $from_date =request('from');
         $to_date =request('to');
         $type =request('type');
@@ -46,38 +53,78 @@ class ReportsController extends Controller
             ->groupBy('type', 'section')
             ->select('type', 'section', DB::raw('COUNT(*) as count'))
             ->get();
-
-                
-            //dd($result);
         return response()->json(['data' => $result]);
     }
 
     public function token_list_home(Request $request)
     {
-        $data = [
-            'user_counts' => null,
-            'users' => null
-        ];
-        return view('report-token-list', $data);
+      
+        return view('report-token-list');
     }
     public function token_list(Request $request)
     {
         $from_date =request('from');
         $to_date =request('to');
-        $result = TokenDetails::select(
+        $data = TokenDetails::select(
             'id',
             'token_name',
             'type',
             'section',
             'post_date',
             'token_status',
-            DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') as created_at"),
+            'created_at',
             DB::raw('(SELECT MAX(tw.updated_at) FROM token_workflows tw WHERE tw.token_id = token_details.id) as last_updated')
         )
         ->whereBetween('post_date', [$from_date, $to_date])
         ->get();
-        
-        return response()->json(['data' => $result]);
+
+        return DataTables::of($data)->make(true);
     }
    
+    public function token_count_hour_home(Request $request)
+    {
+
+        return view('report-token-count-hour');
+    }
+    public function token_count_hour_counter_list(Request $request)
+    {
+        $from_date =request('from');
+        $to_date =request('to');
+        $data = TokenDetails::select(
+            'id',
+            'token_name',
+            'type',
+            'section',
+            'post_date',
+            'token_status',
+            'created_at',
+            DB::raw('(SELECT MAX(tw.updated_at) FROM token_workflows tw WHERE tw.token_id = token_details.id) as last_updated')
+        )
+        ->whereBetween('post_date', [$from_date, $to_date])
+        ->get();
+
+        return DataTables::of($data)->make(true);
+    }
+    
+    public function token_count_hour_total_list(Request $request)
+    {
+        $from_date =request('from');
+        $to_date =request('to');
+        $data = TokenDetails::select(
+            'id',
+            'token_name',
+            'type',
+            'section',
+            'post_date',
+            'token_status',
+            'created_at',
+            DB::raw('(SELECT MAX(tw.updated_at) FROM token_workflows tw WHERE tw.token_id = token_details.id) as last_updated')
+        )
+        ->whereBetween('post_date', [$from_date, $to_date])
+        ->get();
+
+        return DataTables::of($data)->make(true);
+    }
+
+
 }
