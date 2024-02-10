@@ -10,6 +10,7 @@ use App\Models\CounterService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {

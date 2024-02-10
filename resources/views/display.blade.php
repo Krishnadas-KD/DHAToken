@@ -164,7 +164,11 @@
     <div class="row" style="margin-bottom: 15px;">
       <div class="col" style="padding-right:5px;padding-left:5px;">
         <div class="cardheader">
-          <h1>{{strtoupper($service)}}</h1>
+          <h1>@if(strtoupper($service) === 'REGISTRATION')
+    CHECK IN
+@else
+    {{ strtoupper($service) }}
+@endif</h1>
         </div>      
       </div>
     </div>

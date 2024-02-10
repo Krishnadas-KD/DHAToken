@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use Carbon\Carbon;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -31,8 +33,9 @@ class DaliyCountMail extends Mailable
      */
     public function build()
     {
-        $from_date ='2024-01-17';
-        $to_date ='2024-01-17';
+        $yeasterday = Carbon::now()->subDay()->format('Y-m-d');
+        $from_date =$yeasterday;
+        $to_date =$yeasterday;
         $type ='all';
         $section ='all';
         $status ='Completed';
@@ -54,6 +57,6 @@ class DaliyCountMail extends Mailable
             ->get();
         return $this
             ->subject('DHA Daily Report '.$from_date )
-            ->view('email.email_temeplet',['fromDate' => $from_date,'data' => $result]);
+            ->view('email.email_temeplet',['result' => $result]);
     }
 }

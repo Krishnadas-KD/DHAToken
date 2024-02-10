@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TokenDetails;
 use App\Models\TokenSeries;
 use Carbon\Carbon;
-use DataTables;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DaliyCountMail;
+use App\Models\AutoMail;
+use Illuminate\Support\Facades\Auth;
+use DataTables;
+
 
 class ReportsController extends Controller
 {
@@ -27,8 +30,14 @@ class ReportsController extends Controller
     }
     public function token_count(Request $request)
     {
-        $recipientEmail = 'kkrishnadas393@gmail.com';
-        Mail::to($recipientEmail)->send(new DaliyCountMail());
+        $qry = AutoMail::where('report', 'daliy-count')->get();
+
+        
+        foreach ($qry as $mail) {
+            $recipientEmail = $mail->email; 
+            Mail::to($recipientEmail)->send(new DaliyCountMail());
+        }
+        
 
 
 
@@ -83,7 +92,6 @@ class ReportsController extends Controller
    
     public function token_count_hour_home(Request $request)
     {
-
         return view('report-token-count-hour');
     }
     public function token_count_hour_counter_list(Request $request)

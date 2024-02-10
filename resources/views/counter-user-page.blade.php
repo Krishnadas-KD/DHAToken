@@ -89,7 +89,7 @@
     <div class="row">
             <div class="col-lg-12 equel-grid">
                 <div class="grid">
-                    <p class="grid-header">Token List</p>
+                    <p class="grid-header">Token List  <span style=" float: right;" id="pendingCount">Total Pending</span></p>
                     <div class="grid-body" style="overflow-y: auto;max-height: 400px;">
                         <div class="item-wrapper grid-container" id='token_list'>
                            
@@ -194,6 +194,7 @@
             });
            
         });
+
         $('#next_token').on('click',function()
         {
             if (isProcess==false)
@@ -224,7 +225,9 @@
          }
          token_list();
         });
+
         refresh();
+        
         setInterval(function(){ token_list()}, 5000);
 
         function refresh() {
@@ -285,8 +288,9 @@
                                 card.append(cardBody);
                                 div.append(card);
                                 $('#token_list').append(div);
-                                 select_call();
+                                select_call();
                        }
+                       $("#pendingCount").text('Total Pending : '+response.data.total_count)
                     }
                     else{
                         console.log(response.data);
@@ -302,34 +306,34 @@
          function select_call(){
                 if($("#empty").is(":visible"))
                 {
-                    $('[name=retoken]').click(function(event) {
-                var nameValue = $(this).attr('value');
-                var tokenName = $(this).attr('data-value');
-                
-                event.preventDefault();
-                swal({
-                    title: `Are you sure To call Token `+tokenName+` ?`,
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((reprint) => {
-                    if (reprint) {
-                        $.ajax({
-                        url: '/select-call-token/'+nameValue,
-                        type: 'GET',
-                        success: function(response) {
-                           
-                            refresh();
-                        },
-                        error: function(xhr, status, error) {
-                            console.log(xhr.responseText);
-                        }
-                    });
-                    }
-                });
-            });    
-                }
+                            $('[name=retoken]').click(function(event) {
+                            var nameValue = $(this).attr('value');
+                            var tokenName = $(this).attr('data-value');
+                            
+                            event.preventDefault();
+                            swal({
+                                title: `Are you sure To call Token `+tokenName+` ?`,
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            })
+                            .then((reprint) => {
+                                if (reprint) {
+                                    $.ajax({
+                                    url: '/select-call-token/'+nameValue,
+                                    type: 'GET',
+                                    success: function(response) {
+                                        refresh();
+                                        token_list();
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                    }
+                                });
+                                }
+                            });
+                        });    
+            }
                
         }
 

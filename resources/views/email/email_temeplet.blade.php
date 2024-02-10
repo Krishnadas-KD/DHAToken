@@ -10,6 +10,60 @@
     </style>
 </head>
 <body>
+
+@php
+    $newMale = 0;
+    $newFemale = 0;
+    $RenewMale = 0;
+    $RenewFemale = 0;
+    $New= 0;
+    $Renew= 0;
+    $Total= 0; // Initialize male count for type 'new'
+@endphp
+
+@foreach($result as $line)
+    {{-- Check if the record matches the condition: type = 'new' and section = 'male' --}}
+    @php
+      $Total += $line->count;
+    @endphp
+    @if($line->type === 'NEW' && $line->section === 'MALE')
+        @php
+            $newMale += $line->count;
+        @endphp
+    @endif
+
+    @if($line->type === 'NEW' && $line->section === 'FEMALE')
+        @php
+            $newFemale += $line->count;
+        @endphp
+    @endif
+
+    @if($line->type === 'RENEW' && $line->section === 'MALE')
+        @php
+            $RenewMale += $line->count;
+        @endphp
+    @endif
+
+    @if($line->type === 'RENEW' && $line->section === 'FEMALE')
+        @php
+            $RenewFemale += $line->count;
+        @endphp
+    @endif
+
+    @if($line->type === 'RENEW' )
+        @php
+            $Renew += $line->count;
+        @endphp
+    @endif
+
+    @if($line->type === 'NEW' )
+        @php
+            $New += $line->count;
+        @endphp
+    @endif
+
+@endforeach
+
     <h1>DHA Daily Report</h1>
 
     <p>This is the DHA Daily Report Generated {{ now()->format('Y-m-d H:i:s') }}.</p>
@@ -18,21 +72,21 @@
       <div id="total-taken">
         <h2>DHA-NEW MUHAISNAH MEDICAL FITNESS CENTER </h2> 
         <hr/>
-        <h5> From:<span name="from_date"></span> To:<Span name="to_date"></span></h5>
+
         <table>
           <tr>
-            <th colspan="4" class="thtotal">Total Token <br/><span name="total">0</span></th>
+            <th colspan="4" class="thtotal">Total Token <br/><span name="total">{{$Total}}</span></th>
           </tr>
           <tr>
-            <th colspan="2" class="thtyperenew">RENEW<br/><span name="renew">0</span></th>
+            <th colspan="2" class="thtyperenew">RENEW<br/><span name="renew">{{$Renew}}</span></th>
 
-            <th colspan="2" class="thtypenew">NEW <br/><span name="new">0</span></th>
+            <th colspan="2" class="thtypenew">NEW <br/><span name="new">{{$New}}</span></th>
           </tr>
           <tr>
-            <th  class="thtyperenew">MALE <br/><span name="renew_male">0</span></th>
-            <th  class="thtyperenew">FEMALE <br/><span name="renew_female"> 0</span></th>
-            <th  class="thtypenew">MALE <br/><span name="new_male">0</span></th>
-            <th  class="thtypenew">FEMALE <br/><span name="new_female">0</span></th>
+            <th  class="thtyperenew">MALE <br/><span name="renew_male">{{$RenewMale}}</span></th>
+            <th  class="thtyperenew">FEMALE <br/><span name="renew_female"> {{$RenewFemale}}</span></th>
+            <th  class="thtypenew">MALE <br/><span name="new_male">{{$newFemale}}</span></th>
+            <th  class="thtypenew">FEMALE <br/><span name="new_female">{{$newMale}}</span></th>
            
           </tr>
           

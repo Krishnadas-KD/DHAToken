@@ -133,7 +133,12 @@
               <i class="mdi mdi-account-network link-icon"></i>
             </a>
           </li>
-           
+          <li>
+             <a href="{{ route('auto_mail_home') }}">
+              <span class="link-title">Auto Mail</span>
+              <i class="mdi mdi-email link-icon"></i>
+            </a>
+          </li>
           <li>
              <a href="#ui-elements" data-toggle="collapse" aria-expanded="false">
               <span class="link-title">Report</span>
@@ -152,14 +157,21 @@
                       <span class="link-title" style="color:#000">Token Count</span>
                     </a>
                   </li>
-                  <li>
+                  <!-- <li>
                     <a href="{{ route('token_count_hour_home')}}">
                       <i class="mdi  mdi-timelapse link-icon"></i>
                       <span class="link-title" style="color:#000">Token Hour Wise Count</span>
                     </a>
-                  </li>
-
+                  </li> -->
+          
                   </ul>
+                  <li>
+            <a href="{{ route('logout') }}">
+              <span class="link-title">Logout</span>
+              <i class="mdi mdi-logout link-icon"></i>
+            </a>
+          </li>
+
           </li>
          
 
@@ -172,7 +184,12 @@
               <i class="mdi mdi-gauge link-icon"></i>
             </a>
           </li>
-
+          <li>
+            <a href="{{ route('logout') }}">
+              <span class="link-title">Logout</span>
+              <i class="mdi mdi-logout link-icon"></i>
+            </a>
+          </li>
           @endif
 
           @if(auth()->user()->type == 'Token')
@@ -182,7 +199,12 @@
               <i class="mdi mdi-ticket-account link-icon"></i>
             </a>
           </li>
-
+          <li>
+            <a href="{{ route('logout') }}">
+              <span class="link-title">Logout</span>
+              <i class="mdi mdi-logout link-icon"></i>
+            </a>
+          </li>
           @endif
 
           
@@ -213,12 +235,21 @@
                   </li>
                   </ul>
           </li>
-          @endif
+          <li>
+            <a href="{{ route('logout') }}">
+              <span class="link-title">Logout</span>
+              <i class="mdi mdi-logout link-icon"></i>
+            </a>
+          </li>
+         
           
         </ul>
+       
+
+          @endif
       </div>
 
-
+   
       <!-- partial -->
       <div class="page-content-wrapper" id="cont-top" style="background: #ededf1">
 

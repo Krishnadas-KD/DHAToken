@@ -8,7 +8,8 @@ use App\Http\Controllers\{
     ServiceController,
     CounterUserController,
     DisplayController,
-    ReportsController
+    ReportsController,
+    AutomailController
 };
 /*
 |--------------------------------------------------------------------------
@@ -70,11 +71,16 @@ Route::group(['middleware' => ['is_admin', 'auth']], function () {
     Route::get('/counter-next/{id}/{next}', [CounterUserController::class, 'token_next'])->name('token_next');
     Route::get('/counter-cancel/{id}', [CounterUserController::class, 'token_cancel'])->name('token_cancel');
    
+    Route::get('/auto-mail-add', [AutomailController::class, 'auto_mail_home'])->name('auto_mail_home');
+    Route::post('/add-new-auto-mail', [AutomailController::class, 'add_auto_mail'])->name('add_auto_mail');
+    Route::post('/delete-new-auto/{id}', [AutomailController::class, 'delete_auto_mail'])->name('delete_auto_mail');
+
     Route::get('/report-token-count', [ReportsController::class, 'token_count_home'])->name('token_count_home');
     Route::post('/report-token-count', [ReportsController::class, 'token_count'])->name('token_count');
    
     Route::get('/report-token-list', [ReportsController::class, 'token_list_home'])->name('token_list_home');
     Route::post('/report-token-list', [ReportsController::class, 'token_list'])->name('token_list');
+    
 
     
     Route::get('/report-token-count-hour', [ReportsController::class, 'token_count_hour_home'])->name('token_count_hour_home');
