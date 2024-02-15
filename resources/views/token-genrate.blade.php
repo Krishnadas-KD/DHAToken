@@ -74,9 +74,6 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
         <div class="row">
             <div class="col-lg-12 equel-grid">
@@ -295,7 +292,7 @@
                     {   
                         $("#token_list").html("");
                        for (var j = 0; j < response.data.cardsData.length; j++) {
-                                var cardDetails=response.data.cardsData[j];
+                        var cardDetails=response.data.cardsData[j];
                                 var div = $('<a>').addClass('custom-link');
                                 var card = $('<div>').addClass('card');
                                 card.attr('name', 'retoken');

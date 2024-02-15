@@ -39,7 +39,8 @@ class CounterUserController extends Controller
             $current_token=null;
         }
         $data = ['counter_user' => $counter_user,
-                'current_token'=>$current_token];
+                'current_token'=>$current_token,
+                'cardsData'=>[]];
         return view('counter-user-page', $data);
     }
 
@@ -320,7 +321,7 @@ class CounterUserController extends Controller
 
             return response()->json(['message' => 'No data', 'data' => 'None']);
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             // Rollback the transaction if an error occurs
             DB::rollBack();
             return response()->json(['error' => 'Failed to retrieve token'], 500);
@@ -329,6 +330,7 @@ class CounterUserController extends Controller
 
     public function counter_token_list_ajax()
     {
+
         $user = Auth::user();
         $counter_user = DB::table('counter_services')
         ->select('users.id','users.type','users.name','users.email','counters.id','counters.counter_section', 'counters.counter_name', 'counters.counter_number', 'services.service_name', 'services.series_abbr','services.service_time', 'counters.is_bussy')
@@ -345,7 +347,7 @@ class CounterUserController extends Controller
             ->where('section', '=', $counter_user->counter_section)
             ->where('token_status', '=', "Pending ".$counter_user->service_name)
             ->where('closed', '=', '0')
-            ->orderBy('last_updated', 'asc')->orderBy('token_name', 'asc')->take(40)->get();
+            ->orderBy('last_updated', 'asc')->orderBy('token_name', 'asc')->get();
             $totalCount = TokenDetails::select('id')
             ->where('section', '=', $counter_user->counter_section)
             ->where('token_status', '=', "Pending ".$counter_user->service_name)

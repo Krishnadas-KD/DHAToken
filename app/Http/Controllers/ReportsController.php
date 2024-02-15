@@ -30,15 +30,7 @@ class ReportsController extends Controller
     }
     public function token_count(Request $request)
     {
-        $qry = AutoMail::where('report', 'daliy-count')->get();
-
-        
-        foreach ($qry as $mail) {
-            $recipientEmail = $mail->email; 
-            Mail::to($recipientEmail)->send(new DaliyCountMail());
-        }
-        
-
+       
 
 
         $from_date =request('from');
@@ -87,7 +79,15 @@ class ReportsController extends Controller
         ->whereBetween('post_date', [$from_date, $to_date])
         ->get();
 
-        return DataTables::of($data)->make(true);
+        return DataTables::of($data)
+        ->editColumn('created_at', function ($row) {
+        // Format the 'created_at' column
+        return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
+    })
+    ->editColumn('updated_at', function ($row) {
+        // Format the 'updated_at' column
+        return Carbon::parse($row->updated_at)->format('Y-m-d H:i:s');
+    })->make(true);
     }
    
     public function token_count_hour_home(Request $request)

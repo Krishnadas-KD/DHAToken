@@ -268,6 +268,9 @@
             $.ajax({
                 url: '{{$ajxa_url}}',
                 type: 'GET',
+                 data: {
+                    '_token': '{{ csrf_token() }}'
+                },
                 success: function(response) {
                   $('#tokenDiv').empty();
                   if(response.data.counters) {

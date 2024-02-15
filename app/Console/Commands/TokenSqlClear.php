@@ -4,6 +4,12 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use App\Mail\DaliyCountMail;
+use App\Models\AutoMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+
+
 
 class TokenSqlClear extends Command
 {
@@ -46,5 +52,19 @@ class TokenSqlClear extends Command
            
             info( "Caught an exception: " . $e->getMessage());
         } 
+
+         try{ 
+            $qry = AutoMail::where('report', 'daily-count')->get();
+            foreach ($qry as $mail) {
+                $recipientEmail = $mail->email; 
+                Mail::to($recipientEmail)->send(new DaliyCountMail());
+            }
+        }
+        catch (Exception $e) {
+
+             info( "error  ". $e ); 
+        }
+        
+
     }
 }

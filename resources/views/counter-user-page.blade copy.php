@@ -3,10 +3,14 @@
 @section('title')
     Counters
 @endsection('title')
+
 @section('content')
-
-
-<div class="content">
+<div class="content-viewport">
+    <div class="row">
+        <div class="col-lg-4 equel-grid">
+            
+        </div>
+        </div>
         <div class="row">
             <div class="col-lg-12 equel-grid">
                 <div class="grid">
@@ -26,8 +30,6 @@
         </div>
             
     </div>
-
-
     <div class="row">
         <div class="col-lg-12 equel-grid">
             <div class="grid">
@@ -59,20 +61,6 @@
 </div>
 
 
-<div class="row">
-            <div class="col-lg-12 equel-grid">
-                <div class="grid">
-                    <p class="grid-header">Token List  <span style=" float: right;" id="pendingCount">Total Pending:</span></p>
-                    <div class="grid-body" >
-                        <div class="item-wrapper grid-container" id='token_list'>
-                           
-                        </div>
-                    </div>
-            </div>
-        </div>
-</div>
-
-</div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -98,9 +86,17 @@
             </div>
         </div>
     </div>
-
-
-    
+    <div class="row">
+            <div class="col-lg-12 equel-grid">
+                <div class="grid">
+                    <p class="grid-header">Token List  <span style=" float: right;" id="pendingCount">Total Pending:</span></p>
+                    <div class="grid-body" style="overflow-y: auto;max-height: 400px;">
+                        <div class="item-wrapper grid-container" id='token_list'>
+                           
+                        </div>
+                    </div>
+            </div>
+        </div>
 
 <style>
     .highlight-textarea {
@@ -123,6 +119,8 @@
     .custom-link {
         color: inherit;
         text-decoration: none;
+        user-select: none;
+        cursor:pointer;
     }
     .card {
         background-color: #d5f9fa;
@@ -281,16 +279,16 @@
                     {   
                         $("#token_list").html("");
                        for (var j = 0; j < response.data.queue_token.length; j++) {
-                        var cardDetails=response.data.queue_token[j];
-                                var div = $('<a>').addClass('custom-link');
+                                var cardDetails=response.data.queue_token[j];
+                                var div = $('<div>').addClass('custom-link');
                                 var card = $('<div>').addClass('card');
                                 card.attr('name', 'retoken');
                                 card.attr('value', cardDetails.id);
                                 card.attr('data-value', cardDetails.token_name);
                                 var cardBody = $('<div>').addClass('card-body');
-                                var cardTitle = $('<h3>').css({'text-align':'center'});
-                                var tokenDetails2=$('<p>').css({'text-align':'center','font-size':'17px'});
-                                var tokenStatus=$('<p>').css({'text-align':'center','font-size':'17px'});
+                                var cardTitle = $('<h3>').css({'text-align':'center','cursor':'pointer'});
+                                var tokenDetails2=$('<p>').css({'text-align':'center','font-size':'17px','cursor':'pointer'});
+                                var tokenStatus=$('<p>').css({'text-align':'center','font-size':'17px','cursor':'pointer'});
                                 var tokenHead = $('<b>');
                                 cardTitle.append(tokenHead.text('Token: '),' '+cardDetails.token_name+'');
                                 tokenDetails2.append(('Type: '),' '+cardDetails.section+'');
@@ -299,6 +297,7 @@
                                 card.append(cardBody);
                                 div.append(card);
                                 $('#token_list').append(div);
+                                $('#token_list').scrollTop(scrollPosition);
                                 select_call();
                        }
                        $("#pendingCount").text('Total Pending : '+response.data.total_count)

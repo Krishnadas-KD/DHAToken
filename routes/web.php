@@ -9,7 +9,8 @@ use App\Http\Controllers\{
     CounterUserController,
     DisplayController,
     ReportsController,
-    AutomailController
+    AutomailController,
+    ChartController
 };
 /*
 |--------------------------------------------------------------------------
@@ -87,7 +88,8 @@ Route::group(['middleware' => ['is_admin', 'auth']], function () {
     Route::post('/token-count-hour-counter-list', [ReportsController::class, 'token_count_hour_counter_list'])->name('token_count_hour_counter_list');
     Route::post('/token-count-hour-total-list', [ReportsController::class, 'token_count_hour_total_list'])->name('token_count_hour_total_list');
    
-     
+    Route::post('/hourly-token-count', [ChartController::class, 'chartData'])->name('chartData');
+    
 });
 
 

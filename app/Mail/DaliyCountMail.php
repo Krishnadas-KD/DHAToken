@@ -23,7 +23,7 @@ class DaliyCountMail extends Mailable
      */
     public function __construct()
     {
-      
+        info( "Mail from countercter"); 
     }
 
    /**
@@ -33,6 +33,8 @@ class DaliyCountMail extends Mailable
      */
     public function build()
     {
+        try{
+          
         $yeasterday = Carbon::now()->subDay()->format('Y-m-d');
         $from_date =$yeasterday;
         $to_date =$yeasterday;
@@ -55,8 +57,15 @@ class DaliyCountMail extends Mailable
             ->groupBy('type', 'section')
             ->select('type', 'section', DB::raw('COUNT(*) as count'))
             ->get();
+         
         return $this
             ->subject('DHA Daily Report '.$from_date )
             ->view('email.email_temeplet',['result' => $result]);
+        }
+        catch (Exception $e) {
+            info( " Daliy COunt Mail error:" ); 
+            info( e); 
+        }
+
     }
 }
