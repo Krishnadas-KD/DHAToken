@@ -21,16 +21,20 @@ class TokenController extends Controller
     public function token_create(Request $request)
     {
         $user = Auth::user();
+        $random_number = 0;
 
         $type=request('type');
         $section=request('section');
-        $qry = TokenSeries::where('type', $type)
-        ->where('section', $section)
+        $qry = TokenSeries::where('section', $section)
         ->first();
         
         if ($qry) {
-            $next_series = $qry->abbr . ($qry->current_sq+1);
-            $qry->current_sq = $qry->current_sq + 1;
+            if ($qry->current_sq%60===0 &&$qry->current_sq>0)
+            {
+                $random_number = rand(10, 100);
+            }
+            $next_series = $qry->abbr . ($qry->current_sq+1 +($random_number));
+            $qry->current_sq = $qry->current_sq + 1 +($random_number);
             $qry->save();            
         } else {
             $next_series = null;

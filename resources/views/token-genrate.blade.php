@@ -207,7 +207,7 @@
                     if(response.data.customer_token!=null)
                     {   
                         var dateString = new Date(response.data.customer_token.created_at);
-                        dateString = moment(dateString).add(4, 'hours'); 
+                        dateString = moment(dateString); 
                         var formattedDate = moment(dateString).format('YYYY-MM-DD   h:mm:ss A');
                         console.log(response.data.customer_token);
                         $('#created_at').text(' DATE & TIME:'+formattedDate);
@@ -253,7 +253,7 @@
                             if(response.data.customer_token!=null)
                             {   
                                 var dateString = new Date(response.data.customer_token.created_at);
-                                dateString = moment(dateString).add(4, 'hours'); 
+                                dateString = moment(dateString); 
                                 var formattedDate = moment(dateString).format('YYYY-MM-DD   h:mm:ss A');
 
                                 $('#created_at').text(' DATE & TIME:'+formattedDate);
@@ -306,7 +306,7 @@
                                 var tokenHead2 = $('<b>');
                                 var tokenHead3 = $('<b>');
                                 var dateString = new Date(cardDetails.created_at);
-                                dateString = moment(dateString).add(4, 'hours'); 
+                                dateString = moment(dateString); 
                                 var formattedDate = moment(dateString).format('YYYY-MM-DD   h:mm');
                                 cardTitle.append(tokenHead.text('Token: '),' '+cardDetails.token_name+'');
                                 tokenDetails.append(tokenHead2.text('Time: '),' '+formattedDate+'');

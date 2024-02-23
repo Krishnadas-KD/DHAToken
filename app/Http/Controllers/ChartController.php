@@ -14,22 +14,22 @@ class ChartController extends Controller
     
     public function chartData(Request $request)
     {
-        $post_date=request('postingDate');
-
+            try{
+            $post_date=request('postingDate');
             $hour=[];
             $male=[];
             $female=[];
             $new_t=[];
             $renew_t=[];
             $totoalcount=[];
-            $hourlyData=DB::table('token_details')->selectRaw('HOUR(DATE_ADD(created_at, INTERVAL 4 HOUR)) AS hour')
+            $hourlyData=DB::table('token_details')->selectRaw('HOUR(created_at) AS hour')
             ->selectRaw('SUM(CASE WHEN section = "MALE" THEN 1 ELSE 0 END) AS male')
             ->selectRaw('SUM(CASE WHEN section = "FEMALE" THEN 1 ELSE 0 END) AS female')
             ->selectRaw('SUM(CASE WHEN type = "NEW" THEN 1 ELSE 0 END) AS new_t')
             ->selectRaw('SUM(CASE WHEN type = "RENEW" THEN 1 ELSE 0 END) AS renew_t')
             ->selectRaw('COUNT(*) AS count')
             ->whereDate('post_date', $post_date)
-            ->groupByRaw('HOUR(DATE_ADD(created_at, INTERVAL 4 HOUR))')
+            ->groupByRaw('HOUR(created_at)')
             ->get();
             foreach ($hourlyData as $row) {
                 $index=0;
@@ -53,14 +53,19 @@ class ChartController extends Controller
                 }
             }
 
-            foreach ($hour as $h) {
-                // Example: assuming "x" and "y" columns for chart
-                $chartData[] = array("x" => $row['x'], "y" => $row['y']);
+            foreach ($hour as $index => $h) {
+                $chartData[] = array('x' => $h, 'y' => $totoalcount[$index]);
             }
-          $chartData[] = array("x" => $hour, "y" => $totoalcount);
+            $json=json_encode($chartData);   
+            return response()->json(['message' => 'Success', 'data' => $chartData]);
+        }
+        catch (\Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
+            return response()->json(['message' => 'Failed'], 500);
+        }
             
-          $json=json_encode($chartData);     
-        return response()->json(['message' => 'Success', 'data' => $json]);
+        return response()->json(['message' => 'Success', 'data' => null]);
         
     }
 }
