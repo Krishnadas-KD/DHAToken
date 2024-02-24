@@ -31,35 +31,73 @@ class ChartController extends Controller
             ->whereDate('post_date', $post_date)
             ->groupByRaw('HOUR(created_at)')
             ->get();
+
+            $Registration=DB::table('token_workflows')->selectRaw('hour(created_at) as hour, count(*) as count')
+                     ->whereDate('created_at', $post_date)
+                     ->where('service_name', 'Registration')
+                     ->where('status', 'like', 'In%')
+                     ->groupByRaw('HOUR(created_at)')->get();
+
+
+            
+            $Blood_Col=DB::table('token_workflows')->selectRaw('hour(created_at) as hour, count(*) as count')
+                     ->whereDate('created_at', $post_date)
+                     ->where('service_name', 'Blood Collection')
+                     ->where('status', 'like', 'In%')
+                     ->groupByRaw('HOUR(created_at)')->get();
+
+
+                
+            $X_ray=DB::table('token_workflows')->selectRaw('hour(created_at) as hour, count(*) as count')
+            ->whereDate('created_at', $post_date)
+            ->where('service_name', 'X-Ray')
+            ->where('status', 'like', 'In%')
+            ->groupByRaw('HOUR(created_at)')->get();
+
             foreach ($hourlyData as $row) {
-                $index=0;
                 if (in_array($row->hour, $hour))
                 {
                       $index=array_search($row->hour, $hour);
                       $male[$index] +=  $row->male  === "MALE" ?  $row->count : 0;
-                      $female[$index] += $row->male  === "FEMALE" ?  $row->count : 0;
-                      $new_t[$index] += $row->male  === "RENEW" ?  $row->count : 0;
-                      $renew_t[$index] += $row->male  === "NEW" ?  $row->count : 0;
+                      $female[$index] += $row->female  === "FEMALE" ?  $row->count : 0;
+                      $new_t[$index] += $row->new_t  === "RENEW" ?  $row->count : 0;
+                      $renew_t[$index] += $row->renew_t  === "NEW" ?  $row->count : 0;
                       $totoalcount[$index] += $row->count;
                 }
                 else
                 {
                     $hour[] = $row->hour;
                     $male[] = $row->male  === "MALE" ?  $row->count : 0;
-                    $female[] = $row->male  === "FEMALE" ?  $row->count : 0;
-                    $new_t[] = $row->male  === "RENEW" ?  $row->count : 0;
-                    $renew_t[] = $row->male  === "NEW" ?  $row->count : 0;
+                    $female[] = $row->female  === "FEMALE" ?  $row->count : 0;
+                    $new_t[] = $row->new_t  === "RENEW" ?  $row->count : 0;
+                    $renew_t[] = $row->renew_t  === "NEW" ?  $row->count : 0;
                     $totoalcount[] = $row->count;
                 }
             }
-
+            
             foreach ($hour as $index => $h) {
-                $chartData[] = array('x' => $h, 'y' => $totoalcount[$index]);
+                $total[] = array('x' => $h, 'y' => $totoalcount[$index]);
             }
-            $json=json_encode($chartData);   
-            return response()->json(['message' => 'Success', 'data' => $chartData]);
+            foreach ($Registration as $hour) {
+                $registration[] = ['x' => $hour->hour, 'y' => $hour->count];
+            }
+
+
+            foreach ($Blood_Col as $hour) {
+                $blood[] = ['x' => $hour->hour, 'y' => $hour->count];
+            }
+        
+            foreach ($X_ray as $hour) {
+                $x_ray[] = ['x' => $hour->hour, 'y' => $hour->count];
+            }
+
+
+
+             $data=['total'=>$total,'registration'=>$totalmail,'registration'=>$blood,'blood'=>$blood,'x_ray'=>$x_ray];
+            return response()->json(['message' => 'Success', 'data' => $data]);
         }
         catch (\Exception $e) {
+            dd($e);
             // Rollback the transaction if an error occurs
             DB::rollBack();
             return response()->json(['message' => 'Failed'], 500);

@@ -49,12 +49,13 @@
                     success: function(response) {
                         if (response.message==='Failed')
                         {
-                            console.log("feild")
+                            console.log("feild");
                             renderChart(null);
                         }
                         else
                         {
                         var dataPoints=response.data;
+                        console.log(dataPoints)
                         renderChart(dataPoints);
                         }
                        
@@ -89,11 +90,35 @@
             return e.value===0 ? "12:00 AM": (e.value<12? e.value+":00 AM":(e.value>=12?e.value+":00 PM":e.value)); // Append "am" to the numerical label
         }
   },
-  data: [{
-    type: "column",
+  data: [
+  {
+    type: "stackedColumn",
+    name:"Register",
+    color: "#000000",
     indexLabel: "{y}",
     showInLegend: true,
-    dataPoints: dataPoind
+dataPoints: dataPoind.registration
+  },{
+    type: "stackedColumn",
+    name:"total",
+    color: "#f00",
+    indexLabel: "{y}",
+    showInLegend: true,
+    dataPoints: dataPoind.blood
+  },{
+    type: "stackedColumn",
+    name:"total",
+    color: "#00f",
+    indexLabel: "{y}",
+    showInLegend: true,
+    dataPoints: dataPoind.x_ray
+  },{
+    type: "stackedColumn",
+    name:"total",
+    color: "#0b0969",
+    indexLabel: "{y}",
+    showInLegend: true,
+    dataPoints: dataPoind.total
   }]
 });
     chart.render();
