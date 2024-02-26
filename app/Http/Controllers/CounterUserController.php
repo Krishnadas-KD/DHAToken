@@ -58,7 +58,7 @@ class CounterUserController extends Controller
         if (!is_null($counter_user) && !is_null($counter_user->counter_number))
         {
             $current_token=DB::table('token_workflows')
-            ->select('token_workflows.id','token_workflows.token_name','token_workflows.section','token_details.type','token_workflows.service_name')
+            ->select('token_workflows.id','token_workflows.token_name','token_workflows.section','token_details.type','token_workflows.service_name','token_details.is_x_ray')
             ->join('token_details', 'token_details.id', '=', 'token_workflows.token_id')
             ->where('token_workflows.counter_number','=',$counter_user->counter_number)
             ->where('token_workflows.is_closed','=','0')
@@ -78,6 +78,8 @@ class CounterUserController extends Controller
         try{
             //db start
             $user = Auth::user();
+           
+            
 
             $current_token = DB::table('token_workflows')
                             ->where('id','=',$id)
@@ -91,7 +93,8 @@ class CounterUserController extends Controller
             ->where('counters.counter_number', '=', $current_token->counter_number)
             ->orderBy('counters.id')
             ->first();
-
+             
+             
 
             $counter_id = $counter_status->id;
             $counter_section = $counter_status->counter_section;
@@ -100,6 +103,13 @@ class CounterUserController extends Controller
             $service_name = $counter_status->service_name;
             $series_abbr = $counter_status->series_abbr;
             $service_time = $counter_status->service_time;
+            if($service_name=="Registration")
+            {
+                $x_ray=request('xray');
+                DB::table('token_details')
+                ->where('id', $current_token->token_id)
+                ->update(['is_x_ray' => $x_ray]);
+            }
 
             //next status
             if ($current_token->service_name == "Registration") {
@@ -164,12 +174,13 @@ class CounterUserController extends Controller
                 ->update(['is_closed' => '1']);
             
             }
-            return response()->json(['message' => 'Success', 'data' => 'Done']);
+            
+            return redirect()->route('counter_user_index');
         }
         catch (\Exception $e) {
             // Rollback the transaction if an error occurs
             DB::rollBack();
-            return response()->json(['error' => 'Failed to retrieve token'], 500);
+            return redirect()->route('counter_user_index');
         }
         
     }

@@ -43,8 +43,12 @@
                          @if( $counter_user->service_name == 'Blood Collection' || $counter_user->service_name == 'X-Ray')
                          <button id="complete_a" href="/counter-next/complete" class="btn btn-sm btn-success" style="padding:25px 39px 25px 39px; font-size:20px">Completed</a>
                          @endif
-                         @if( $counter_user->service_name == 'Registration' || $counter_user->service_name == 'Blood Collection' )
+                         @if( $counter_user->service_name == 'Blood Collection'  )
                          <button id="next_a" href="/counter-next/next" class="btn btn-sm btn-primary" style="padding:25px 39px 25px 39px; font-size:20px">Next</a>
+                         @endif
+                         @if( $counter_user->service_name == 'Registration' )
+                         <button class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#regModel" style="padding:25px 39px 25px 39px; font-size:20px">Next</button>
+
                          @endif
                     </div>
                     </div>
@@ -73,17 +77,18 @@
 </div>
 
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="regModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Cancel Token</h5>
+                    <h5 class="modal-title" id="regModalLabel">Cancel Token</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="cancel_form"  action="/counter-cancel/" method="GET">
+                <form id="cancel_form"  action="/counter-cancel/"
+                 method="GET">
                 <div class="modal-body">
                     <div class="form-group">
                             <label for="textArea">Reason</label>
@@ -100,9 +105,65 @@
     </div>
 
 
+    <div class="modal fade" id="regModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> X-Ray</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="next_reg"  action="/counter-next/next" method="GET">
+                <div class="modal-body">
+                    <div class="form-group custom-control-group">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="yesOption" name="xray" value="1" class="custom-control-input" required>
+                            <label class="custom-control-label" for="yesOption">Yes</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="noOption" name="xray"  value="0" class="custom-control-input" required>
+                            <label class="custom-control-label" for="noOption">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button  type="submit" class="btn btn-sm btn-success">Next</a>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
     
 
 <style>
+   .custom-control-group {
+        display: flex;
+        justify-content: center;
+    }
+
+    .custom-control.custom-radio .custom-control-input:checked~.custom-control-label::before {
+        background-color: #007bff; /* Blue color */
+        border-color: #007bff; /* Blue color */
+    }
+
+    .custom-control.custom-radio .custom-control-input:focus~.custom-control-label::before {
+        box-shadow: 0 0 0 1px #007bff, 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Blue color */
+    }
+
+    .custom-control-label {
+        color: #000; /* Blue color */
+    }
+
+    .custom-control-label:hover {
+        color: #0056b3; /* Darker shade of blue on hover */
+    }
+
+    .custom-control {
+        margin-right: 50px; /* Adjust spacing between radio buttons */
+    }
     .highlight-textarea {
             background-color: #f8f9fa; /* Set the background color */
             color: #000000; /* Set the text color */
@@ -254,7 +315,18 @@
                         $('#section').text(response.data.current_token.section);
                         $('#cancel_form').attr('action', '/counter-cancel/'+response.data.current_token.id);
                         $('#complete_a').attr('href', '/counter-next/'+response.data.current_token.id+'/Completed');
-                        $('#next_a').attr('href', '/counter-next/'+response.data.current_token.id+'/next');
+
+                        if (response.data.current_token.is_x_ray===1)
+                        {
+                            $('#next_a').attr('href', '/counter-next/'+response.data.current_token.id+'/next');
+                        }
+                        else
+                        {
+                            $('#next_a').hide();
+                        }
+                        
+                        $('#next_reg').attr('action', '/counter-next/'+response.data.current_token.id+'/next');
+                        
                     }
                     else{
                         $('#not_empty').hide();

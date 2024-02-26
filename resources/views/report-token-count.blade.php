@@ -305,8 +305,6 @@ $.ajax({
         $("#loader").addClass( "d-none" );
     },
     error:function(response) {
-
-        console.log(response);
         $("#loader").addClass( "d-none" )
     }
 });

@@ -9,7 +9,7 @@ class TokenDetails extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type','section','post_date', 'token_name', 'crt_user','is_printed','print_count','last_print','token_status','colsed'];
+    protected $fillable = ['type','section','post_date', 'token_name', 'crt_user','is_printed','print_count','last_print','token_status','colsed','is_x_ray'];
     
     protected static function boot()
     {

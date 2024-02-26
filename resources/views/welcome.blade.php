@@ -11,10 +11,11 @@
     <label for="my-input">Date</label>
     <input  id="postingDate" style="width:250px" class="form-control" type="date"  name="" required>
 </div>
-<div id="chartContainer" style="height: 370px; width: 100%;"></div>
 
-<canvas id="myPieChart" style="flex: 1;"></canvas>
-<canvas id="myPieChart2" style="flex: 1;"></canvas>
+<div >
+        <canvas id="myChart" style="height:100px;"></canvas>
+    </div>
+
 </div>
 </div>
 
@@ -25,135 +26,107 @@
 @stop
 @section('script')
 
-<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            var formattedDate = new Date().toISOString().slice(0,10);
-            $('#postingDate').val(formattedDate);
-            fetchHourlyTokenCount( formattedDate);
-            
-            $('#postingDate').on('change', function() {
-                var postingDate = $(this).val();
-                fetchHourlyTokenCount(postingDate);
-            });
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script>
+ $(document).ready(function(){
+    var formattedDate = new Date().toISOString().slice(0,10);
+    $('#postingDate').val(formattedDate);
+    fetchHourlyTokenCount( formattedDate);
+    
+    $('#postingDate').on('change', function() {
+        var postingDate = $(this).val();
+        fetchHourlyTokenCount(postingDate);
+    });
 
-           function fetchHourlyTokenCount(postingDate) {
-                // AJAX request to fetch hourly token count
-                $.ajax({
-                    url: "/hourly-token-count",
-                    method: "POST",
-                    data: {
-                        '_token': '{{ csrf_token() }}',
-                        postingDate: postingDate
-                    },
-                    success: function(response) {
-                        if (response.message==='Failed')
-                        {
-                            console.log("feild");
-                            renderChart(null);
-                        }
-                        else
-                        {
-                        var dataPoints=response.data;
-                        console.log(dataPoints)
-                        renderChart(dataPoints);
-                        }
-                       
-
-                    },
-                    error: function(error) {
-                        console.log(error);
-                        renderChart(null);
-                    }
-                });
+    function fetchHourlyTokenCount(postingDate) {
+        // AJAX request to fetch hourly token count
+        $.ajax({
+            url: "/hourly-token-count",
+            method: "POST",
+            data: {
+                '_token': '{{ csrf_token() }}',
+                postingDate: postingDate
+            },
+            success: function(response) {
+                if (response.message==='Failed')
+                {
+                    renderChart(null);
+                }
+                else
+                {
+                    var dataPoints=response.data;
+                    renderChart(dataPoints);
+                }
+            },
+            error: function(error) {
+                renderChart(null);
             }
-        
-            
-        var myChart,myPieChart;
+        });
+    }
+    var myChart;
+    function renderChart(dataPoint) {
+        Chart.register(ChartDataLabels);
 
-
-            function renderChart(dataPoind) {
-                var chart = new CanvasJS.Chart("chartContainer", {
-  animationEnabled: true,
-  theme: "light2",
-  title: {
-    text: "Hourly Token Count"
-  },
-  axisY: {
-    title: "Values"
-  },
-  axisX: {
-    type: "datetime",
-    interval: 1,
-    valueFormatString: "HH:mm tt",
-    labelFormatter: function (e) {
-            return e.value===0 ? "12:00 AM": (e.value<12? e.value+":00 AM":(e.value>=12?e.value+":00 PM":e.value)); // Append "am" to the numerical label
+        const labels = dataPoint.total.map(item => item.hour ===0 ?'12AM' :(item.hour<12? item.hour +' AM':(item.hour===12?'12 PM':item.hour-12+'PM')));
+        const totalCounts = dataPoint.total.map(item => item.count);
+        const registerCounts = dataPoint.registration.map(item => item.count);
+        const bloodCounts = dataPoint.blood.map(item => item.count);
+        //const x_rayCounts = dataPoint.x_ray.map(item => item.count);
+        const ctx = document.getElementById('myChart').getContext('2d');
+        if (myChart) {
+            myChart.destroy();
         }
-  },
-  data: [
-  {
-    type: "stackedColumn",
-    name:"Register",
-    color: "#000000",
-    indexLabel: "{y}",
-    showInLegend: true,
-dataPoints: dataPoind.registration
-  },{
-    type: "stackedColumn",
-    name:"total",
-    color: "#f00",
-    indexLabel: "{y}",
-    showInLegend: true,
-    dataPoints: dataPoind.blood
-  },{
-    type: "stackedColumn",
-    name:"total",
-    color: "#00f",
-    indexLabel: "{y}",
-    showInLegend: true,
-    dataPoints: dataPoind.x_ray
-  },{
-    type: "stackedColumn",
-    name:"total",
-    color: "#0b0969",
-    indexLabel: "{y}",
-    showInLegend: true,
-    dataPoints: dataPoind.total
-  }]
-});
-    chart.render();
-
-
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels ,
+                datasets: [{
+                    label: 'Issued',
+                    data: totalCounts,
+                    backgroundColor: 'rgba(00, 00, 255, 1)',
+                    borderColor: 'rgba(40, 40, 251, .8)',
+                    borderWidth: 1,
+                },{
+                    label: 'Register',
+                    data: registerCounts,
+                    backgroundColor: 'rgba(00, 255, 00, 1)',
+                    borderColor: 'rgba(40, 255, 40, .8)',
+                    borderWidth: 1
+                },{
+                    label: 'Blood Collection',
+                    data: bloodCounts,
+                    backgroundColor: 'rgba(255, 00, 00, 1)',
+                    borderColor: 'rgba(255, 40, 40, .8)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                },
+            plugins: {
+                tooltip: { enabled: false }, // Disable tooltips for better visibility of datalabels
+                    legend: { position: 'top' }, // Adjust legend position as needed
+                datalabels: {
+                anchor: 'end',
+                align: 'top',
+                formatter: Math.round,
+                font: {
+                    weight: 'bold',
+                    size: 8
+                }
+                }
+            }
+            }
+        });
     }
 
          
 
-        function updatePieChart(hour, maleCount, femaleCount, newMaleCount, renewMaleCount) {
-    if (myPieChart) {
-        myPieChart.destroy(); // Destroy the previous pie chart instance
-    }
-
-    var ctx = document.getElementById('myPieChart');
-    myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Male', 'Female', 'New Male', 'Renew Male'],
-            datasets: [{
-                data: [maleCount, femaleCount, newMaleCount, renewMaleCount],
-                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(153, 102, 255, 0.2)'],
-                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(153, 102, 255, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Hour ' + hour + ' Details'
-            }
-        }
-    });
-}
-    });
-    </script>
+       
+});
+</script>
 @stop('script')

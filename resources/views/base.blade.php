@@ -251,7 +251,7 @@
 
    
       <!-- partial -->
-      <div class="page-content-wrapper" id="cont-top" style="background: #ededf1">
+      <div class="page-content-wrapper" id="cont-top" style="background: #ededf1; padding-bottom:0px;">
 
         <div class="page-content-wrapper-inner">
             @if ($msg = Session::get('success'))

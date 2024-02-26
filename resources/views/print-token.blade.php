@@ -141,7 +141,6 @@
 
     function printFunc() {
             var divToPrint = document.getElementById('print-div');
-             console.log(divToPrint);
 
 
 

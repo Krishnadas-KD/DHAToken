@@ -209,7 +209,6 @@
                         var dateString = new Date(response.data.customer_token.created_at);
                         dateString = moment(dateString); 
                         var formattedDate = moment(dateString).format('YYYY-MM-DD   h:mm:ss A');
-                        console.log(response.data.customer_token);
                         $('#created_at').text(' DATE & TIME:'+formattedDate);
                         $('#token_name').text(response.data.customer_token.token_name);
                         $('#visa_type').text('VISA MEDICAL '+response.data.customer_token.type);
@@ -222,9 +221,6 @@
                         printWindow.document.close();
                         printWindow.print();
                         printWindow.close();
-                    }
-                    else{
-                        console.log(response.data);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -269,10 +265,7 @@
                                 printWindow.print();
                                 printWindow.close();  
                             }
-                            else{
-                                alert(nameValue);
-                                console.log(response.data);
-                            }
+                            
                         },
                         error: function(xhr, status, error) {
                             console.log(xhr.responseText);
@@ -320,10 +313,7 @@
                                 
                        }
                     }
-                    else{
-                        alert(nameValue);
-                        console.log(response.data);
-                    }
+                    
                     re_print();
                 },
                 error: function(xhr, status, error) {
