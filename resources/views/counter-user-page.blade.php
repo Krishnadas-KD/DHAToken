@@ -321,7 +321,7 @@
                         $('#type').text(response.data.current_token.type);
                         $('#section').text(response.data.current_token.section);
                         $('#cancel_form').attr('action', '/counter-cancel/'+response.data.current_token.id);
-                        if (response.data.current_token.is_x_ray===1)
+                        if (response.data.current_token.is_x_ray===1 && response.data.current_token.section==='Blood Collection')
                         {
                             $('#next_a').show();
                             $('#next_a').attr('href', '/counter-next/'+response.data.current_token.id+'/next');
