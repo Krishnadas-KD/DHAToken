@@ -15,7 +15,7 @@ class CounterUserController extends Controller
     public function counter_user_index()
     {
         $user = Auth::user();
-        
+
         $counter_user = DB::table('counter_services')
         ->select('users.id','users.type','users.name','users.email','counters.id','counters.counter_section', 'counters.counter_name', 'counters.counter_number', 'services.service_name', 'services.series_abbr','services.service_time', 'counters.is_bussy','counters.is_active')
         ->join('counters', 'counter_services.counter_id', '=', 'counters.id')
@@ -24,6 +24,7 @@ class CounterUserController extends Controller
         ->join('services', 'counter_services.service_id', '=', 'services.id')
         ->where('users.id', '=', $user->id)
         ->first();
+
         if (!is_null($counter_user) && !is_null($counter_user->counter_number))
         {
             $current_token=DB::table('token_workflows')
@@ -31,6 +32,7 @@ class CounterUserController extends Controller
             ->join('token_details', 'token_details.id', '=', 'token_workflows.token_id')
             ->where('token_workflows.counter_number','=',$counter_user->counter_number)
             ->where('token_workflows.is_closed','=','0')
+            ->where('token_details.closed','=','0')
             ->where('token_workflows.status','LIKE','In%')
             ->first();
         }
@@ -38,15 +40,18 @@ class CounterUserController extends Controller
         {
             $current_token=null;
         }
+
         $data = ['counter_user' => $counter_user,
                 'current_token'=>$current_token,
                 'cardsData'=>[]];
+
         return view('counter-user-page', $data);
     }
 
     public function counter_user_refreshcall()
     {
         $user = Auth::user();
+
         $counter_user = DB::table('counter_services')
         ->select('users.id','users.type','users.name','users.email','counters.id','counters.counter_section', 'counters.counter_name', 'counters.counter_number', 'services.service_name', 'services.series_abbr','services.service_time', 'counters.is_bussy')
         ->join('counters', 'counter_services.counter_id', '=', 'counters.id')
@@ -55,6 +60,7 @@ class CounterUserController extends Controller
         ->join('services', 'counter_services.service_id', '=', 'services.id')
         ->where('users.id', '=', $user->id)
         ->first();
+
         if (!is_null($counter_user) && !is_null($counter_user->counter_number))
         {
             $current_token=DB::table('token_workflows')
@@ -62,6 +68,7 @@ class CounterUserController extends Controller
             ->join('token_details', 'token_details.id', '=', 'token_workflows.token_id')
             ->where('token_workflows.counter_number','=',$counter_user->counter_number)
             ->where('token_workflows.is_closed','=','0')
+            ->where('token_details.closed','=','0')
             ->where('token_workflows.status','LIKE','In%')
             ->first();
         }
@@ -69,7 +76,9 @@ class CounterUserController extends Controller
         {
             $current_token=null;
         }
+
         $data = ['current_token'=>$current_token];
+
         return response()->json(['message' => 'Success', 'data' => $data]);
     }
 
@@ -78,14 +87,10 @@ class CounterUserController extends Controller
         try{
             //db start
             $user = Auth::user();
-           
-            
 
             $current_token = DB::table('token_workflows')
                             ->where('id','=',$id)
                             ->first();
-
-            
             $counter_status = DB::table('counter_services')
             ->select('counters.id','counters.counter_section', 'counters.counter_name', 'counters.counter_number', 'services.service_name', 'services.series_abbr','services.service_time', 'counters.is_bussy')
             ->join('counters', 'counter_services.counter_id', '=', 'counters.id')
@@ -93,31 +98,24 @@ class CounterUserController extends Controller
             ->where('counters.counter_number', '=', $current_token->counter_number)
             ->orderBy('counters.id')
             ->first();
-             
-             
-
-            $counter_id = $counter_status->id;
             $counter_section = $counter_status->counter_section;
             $counter_name = $counter_status->counter_name;
             $counter_number = $counter_status->counter_number;
             $service_name = $counter_status->service_name;
-            $series_abbr = $counter_status->series_abbr;
             $service_time = $counter_status->service_time;
-            if($service_name=="Registration")
-            {
+
+            if($service_name=="Registration"){
                 $x_ray=request('xray');
                 DB::table('token_details')
                 ->where('id', $current_token->token_id)
                 ->update(['is_x_ray' => $x_ray]);
             }
-
             //next status
             if ($current_token->service_name == "Registration") {
                 $status = "Pending Blood Collection";
             } elseif ($service_name == "Blood Collection") {
                 $status = "Pending X-Ray";
-                if($next=="Completed")
-                {
+                if($next=="Completed"){
                     $status="Completed";
                 }
             } elseif ($service_name == "X-Ray") {
@@ -125,11 +123,8 @@ class CounterUserController extends Controller
             } else {
                 $status = "Unknown Service";
             }
-
-            
-            if ( $status=="Completed") 
-            {
-                $new_flow = TokenWorkFlows::create([
+            if ( $status=="Completed") {
+                 TokenWorkFlows::create([
                     'token_name' => $current_token->token_name,
                     'token_id' => $current_token->token_id,
                     'service_name' => $service_name,
@@ -148,36 +143,32 @@ class CounterUserController extends Controller
                 DB::table('token_workflows')
                     ->where('id', $id)
                     ->update(['is_closed' => '1']);
-                
-            
             }
             else{
-            $new_flow = TokenWorkFlows::create([
-                'token_name' => $current_token->token_name,
-                'token_id' => $current_token->token_id,
-                'service_name' => $service_name,
-                'service_time' => $service_time,
-                'counter_name' => $counter_name,
-                'counter_number' => $counter_number,
-                'section' => $counter_section,
-                'status' => $status,
-                'created_user' => $user->email
-            ]);
-            
-            DB::table('token_details')
-                ->where('id', $current_token->token_id)
-                ->update(['token_status' => $status]);
-
-
-            DB::table('token_workflows')
-                ->where('id', $id)
-                ->update(['is_closed' => '1']);
+                TokenWorkFlows::create([
+                    'token_name' => $current_token->token_name,
+                    'token_id' => $current_token->token_id,
+                    'service_name' => $service_name,
+                    'service_time' => $service_time,
+                    'counter_name' => $counter_name,
+                    'counter_number' => $counter_number,
+                    'section' => $counter_section,
+                    'status' => $status,
+                    'created_user' => $user->email
+                ]);
+                
+                DB::table('token_details')
+                    ->where('id', $current_token->token_id)
+                    ->update(['token_status' => $status]);
+                DB::table('token_workflows')
+                    ->where('id', $id)
+                    ->update(['is_closed' => '1']);
             
             }
             
             return redirect()->route('counter_user_index');
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             // Rollback the transaction if an error occurs
             DB::rollBack();
             return redirect()->route('counter_user_index');
@@ -284,7 +275,6 @@ class CounterUserController extends Controller
             ->where('users.id', '=', $user->id)
             ->first();
 
-            $counter_id = $counter_user->counter_id;
             $counter_name=$counter_user->counter_name;
             $counter_number=$counter_user->counter_number;
             $counter_section=$counter_user->counter_section;
@@ -298,6 +288,7 @@ class CounterUserController extends Controller
             ->where('section', '=', $counter_section)
             ->where('token_status', '=', $status)
             ->where('is_printed', '=', '1')
+            ->where('closed', '=', '0')
             ->orderBy('last_updated', 'asc')->orderBy('token_name', 'asc')->lockForUpdate()
             ->first();
             
@@ -305,7 +296,6 @@ class CounterUserController extends Controller
                 DB::table('token_details')
                     ->where('id', $token->id)
                     ->update(['token_status' => "In " . $service_name]);
-                
                 DB::table('token_workflows')
                 ->where('token_id', '=',$token->id)
                 ->where('is_closed','=','0')
@@ -325,10 +315,10 @@ class CounterUserController extends Controller
                 ]);
                 return response()->json(['message' => 'Success', 'data' => 'Done']);
 
-                }
-                else{
-                    DB::commit();
-                }
+            }
+            else{
+                DB::commit();
+            }
 
             return response()->json(['message' => 'No data', 'data' => 'None']);
         }
@@ -353,11 +343,11 @@ class CounterUserController extends Controller
         ->first();
         if (!is_null($counter_user) && !is_null($counter_user->counter_number))
         {
-            $queue_token = TokenDetails::select('id', 'token_name', 'type', 'section', 'token_status','created_at')
+            $queue_token = TokenDetails::select('id', 'token_name', 'type', 'section', 'token_status','created_at','closed')
             ->selectRaw('COALESCE((SELECT MAX(created_at) FROM token_workflows WHERE token_id = token_details.id), created_at) AS last_updated')
             ->where('section', '=', $counter_user->counter_section)
             ->where('token_status', '=', "Pending ".$counter_user->service_name)
-            ->where('closed', '=', '0')
+            ->where('closed', '!=', '1')
             ->orderBy('last_updated', 'asc')->orderBy('token_name', 'asc')->get();
             $totalCount = TokenDetails::select('id')
             ->where('section', '=', $counter_user->counter_section)
@@ -400,7 +390,7 @@ class CounterUserController extends Controller
             $status="Pending ".$service_name;
 
 
-            $token = TokenDetails::select('id', 'token_name', 'type', 'section', 'token_status')
+            $token = TokenDetails::select('id', 'token_name', 'type', 'section', 'token_status','closed')
             ->where('id', '=',$id)
             ->where('section', '=', $counter_section)
             ->where('token_status', '=', $status)
@@ -410,6 +400,13 @@ class CounterUserController extends Controller
         
             if($token){
                 
+                if($token->closed== 2)
+                {
+                    DB::table('token_details')
+                    ->where('id', $token->id)
+                    ->update(['closed' => '0']);
+                }
+
                 DB::table('token_details')
                     ->where('id', $token->id)
                     ->update(['token_status' => "In " . $service_name]);
@@ -444,6 +441,31 @@ class CounterUserController extends Controller
             return response()->json(['error' => 'Failed to retrieve token'], 500);
         }
  
+    }
+    public function token_hold_ajax(Request $request, $id)
+    {
+        try{
+            DB::beginTransaction();
+            $user = Auth::user();
+            $current_token = DB::table('token_workflows')
+                            ->where('id','=',$id)
+                            ->first();
+            $token_id=$current_token->token_id;
+            $service_name=$current_token->service_name;
+            DB::table('token_details')
+            ->where('id', $token_id)
+            ->update(['token_status' => "Pending " .$service_name,'closed' => '2']);
+            DB::table('token_workflows')
+            ->where('id', $id)
+            ->update(['is_closed' => '1', 'status' => 'Hold']);
+            DB::commit();
+        }
+        catch (Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
+            return redirect()->route('counter_user_index');
+        }
+
     }
 
 

@@ -11,6 +11,35 @@
     <label for="my-input">Date</label>
     <input  id="postingDate" style="width:250px" class="form-control" type="date"  name="" required>
 </div>
+<div class="row  justify-content-center">
+
+  <div class="col-sm-2">
+    <div class="card">
+      <div class="card-body" style="background-color:rgba(30, 30, 255, 1);border-color:rgba(100, 100, 255, 1);border-radius:10px">
+        <h3 style="text-align:center;">Issued</h3>
+        <h2  style="text-align:center;"><b id="total_issued">0</b></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-2">
+    <div class="card">
+      <div class="card-body" style="background-color:rgba(30, 255, 20, 1);border-color:rgba(100, 255, 100, 1);border-radius:10px">
+        <h3 style="text-align:center;">Registration</h3>
+        <h2  style="text-align:center;"><b id="total_registred">0</b></h2>
+      </div>
+    </div>
+  </div>
+
+    <div class="col-sm-2">
+    <div class="card">
+      <div class="card-body" style="background-color:rgba(255, 30, 30, 1);border-color:rgba(255, 100, 100, 1);border-radius:10px">
+        <h3 style="text-align:center;">Blood Collection</h3>
+        <h2  style="text-align:center;"><b id="total_blood">0</b></h2>
+      </div>
+    </div>
+  </div>
+
+  </div>
 
 <div >
         <canvas id="myChart" style="height:100px;"></canvas>
@@ -67,7 +96,6 @@
     var myChart;
     function renderChart(dataPoint) {
         Chart.register(ChartDataLabels);
-
         const labels = dataPoint.total.map(item => item.hour ===0 ?'12AM' :(item.hour<12? item.hour +' AM':(item.hour===12?'12 PM':item.hour-12+'PM')));
         const totalCounts = dataPoint.total.map(item => item.count);
         const registerCounts = dataPoint.registration.map(item => item.count);
@@ -122,6 +150,16 @@
             }
             }
         });
+        const totalSum = totalCounts.reduce((x, count) => x + count, 0);
+
+        const registerSum = registerCounts.reduce((x, count) => x + count, 0);
+
+        const bloodSum = bloodCounts.reduce((x, count) => x + count, 0);
+        $("#total_issued").text(totalSum);
+        $("#total_registred").text(registerSum);
+        $("#total_blood").text(bloodSum);
+
+
     }
 
          

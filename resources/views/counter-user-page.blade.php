@@ -33,23 +33,23 @@
             <div class="grid">
             @if (!is_null($counter_user))
                     <div class="grid-body" style="text-align:center;display:none;"  id="not_empty" >
-                        <div class="card-title" style="display: block; font-size:30px;">Token Name: <span id="token_name" > </span></div>
-                        <div  class="card-title" style="display: block; font-size:30px;">Visa type: <span id="type"> </span></div>
-                        <div  class="card-title" style="display: block; font-size:30px;">Section: <span id="section"> </span></div>
-                        <div class="grid-body d-flex justify-content-between">
+                        <div class="card-title" style="display: block; font-size:30px;"><b>Token Name</b>: <span id="token_name" > </span></div>
+                        <div  class="card-title" style="display: block; font-size:30px;"><b>Visa type</b>: <span id="type"> </span></div>
+                        <div  class="card-title" style="display: block; font-size:30px;"><b>Section</b>: <span id="section"> </span></div>
+                        <div class="grid-body d-flex justify-content-center align-items-center">
                         @if( $counter_user->service_name == 'Registration' )
-                         <button class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#myModal" style="padding:25px 39px 25px 39px; font-size:20px">Cancel</button>
+                         <button class="btn btn-sm btn-danger"  data-toggle="modal" data-target="#myModal" style="padding:25px 39px 25px 39px; font-size:20px;margin-right:150px">Cancel</button>
                          @endif
                          @if( $counter_user->service_name == 'Blood Collection' || $counter_user->service_name == 'X-Ray')
-                         <button id="complete_a" href="/counter-next/complete" class="btn btn-sm btn-success" style="padding:25px 39px 25px 39px; font-size:20px">Completed</a>
+                         <button id="complete_a" href="/counter-next/complete" class="btn btn-sm btn-success" style="padding:25px 39px 25px 39px; font-size:20px">Completed</button>
                          @endif
                          @if( $counter_user->service_name == 'Blood Collection'  )
-                         <button id="next_a" href="/counter-next/next" class="btn btn-sm btn-primary" style="padding:25px 39px 25px 39px; font-size:20px">Next</a>
+                         <button id="next_a" href="/counter-next/next" class="btn btn-sm btn-primary" style="padding:25px 39px 25px 39px; font-size:20px">Next</button>
                          @endif
                          @if( $counter_user->service_name == 'Registration' )
                          <button class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#regModel" style="padding:25px 39px 25px 39px; font-size:20px">Next</button>
-
                          @endif
+                         <button id="hold_a" href="token-hold/" class="btn btn-sm btn-warning" style="background-color:rgb(255, 182, 42);border-color:rgb(255, 182, 42);padding:25px 39px 25px 39px; font-size:20px;margin-left:150px">Hold</button>
                     </div>
                     </div>
                     
@@ -63,17 +63,30 @@
 </div>
 
 
+
 <div class="row">
-            <div class="col-lg-12 equel-grid">
-                <div class="grid">
-                    <p class="grid-header">Token List  <span style=" float: right;" id="pendingCount">Total Pending:</span></p>
-                    <div class="grid-body" >
-                        <div class="item-wrapper grid-container" id='token_list'>
-                           
-                        </div>
-                    </div>
+    <div class="col-lg-6 equel-grid">
+        <div class="grid" >
+            <p class="grid-header">Token List  <span style=" float: right;" id="total_pendingCount">Total Pending:</span></p>
+            <div class="grid-body" style="overflow-y: auto;max-height: 500px;">
+                <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));" id='token_list'>
+                    
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="col-lg-6 equel-grid">
+        <div class="grid" >
+            <p class="grid-header">Hold List  <span style=" float: right;" id="hold_pendingCount">Total Pending:</span></p>
+            <div class="grid-body" style="overflow-y: auto;max-height: 500px;">
+                <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"  id='hold_list'>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 </div>
@@ -87,8 +100,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="cancel_form"  action="/counter-cancel/"
-                 method="GET">
+                <form id="cancel_form"  action="/counter-cancel/" method="GET">
                 <div class="modal-body">
                     <div class="form-group">
                             <label for="textArea">Reason</label>
@@ -97,7 +109,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button  type="submit" class="btn btn-danger">Submit</a>
+                    <button  type="submit" class="btn btn-danger">Submit</button>
                 </div>
                 </form>
             </div>
@@ -130,7 +142,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button  type="submit" class="btn btn-sm btn-success">Next</a>
+                    <button  type="submit" class="btn btn-sm btn-success">Next</button>
                 </div>
                 </form>
             </div>
@@ -139,51 +151,19 @@
     
 
 <style>
-   .custom-control-group {
-        display: flex;
-        justify-content: center;
-    }
 
-    .custom-control.custom-radio .custom-control-input:checked~.custom-control-label::before {
-        background-color: #007bff; /* Blue color */
-        border-color: #007bff; /* Blue color */
-    }
-
-    .custom-control.custom-radio .custom-control-input:focus~.custom-control-label::before {
-        box-shadow: 0 0 0 1px #007bff, 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Blue color */
-    }
-
-    .custom-control-label {
-        color: #000; /* Blue color */
-    }
-
-    .custom-control-label:hover {
-        color: #0056b3; /* Darker shade of blue on hover */
-    }
-
-    .custom-control {
-        margin-right: 50px; /* Adjust spacing between radio buttons */
-    }
-    .highlight-textarea {
-            background-color: #f8f9fa; /* Set the background color */
-            color: #000000; /* Set the text color */
-            border: 1px solid #ced4da; /* Set border color */
-            border-radius: .2rem; /* Add some border radius for aesthetics */
-            resize: none; /* Disable resizing of the textarea */
-            min-height: 150px; /* Set a minimum height */
-        }
-    .card-title {
-    display: block; /* Make each element a block element */
-    margin-bottom: 10px; /* Add some spacing between elements */
-    }
-    .grid-container {
+.grid-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
-        gap: 10px; /* Adjust the gap between cards */
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+        gap: 10px; 
     }
     .custom-link {
         color: inherit;
         text-decoration: none;
+    }
+    .custom-link:hover {
+        text-decoration: none; 
+        color: inherit; 
     }
     .card {
         background-color: #d5f9fa;
@@ -197,7 +177,7 @@
 
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <script>
     $(document).ready(function() {
@@ -247,6 +227,33 @@
                     if(response.data="Done")
                     {   
                          isProcess=false;
+                        refresh();
+                        token_list();
+                    }
+                    else{
+                        console.log(response.data);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    
+                    console.log(xhr.responseText);
+                }
+            });
+           
+        });
+        $('#hold_a').on('click',function()
+        {
+            var form_url = $(this).attr('href');
+            $.ajax({
+                url: form_url,
+                type: 'GET',
+                data: {
+                    '_token': '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if(response.data="Done")
+                    {   
+                        isProcess=false;
                         refresh();
                         token_list();
                     }
@@ -314,17 +321,19 @@
                         $('#type').text(response.data.current_token.type);
                         $('#section').text(response.data.current_token.section);
                         $('#cancel_form').attr('action', '/counter-cancel/'+response.data.current_token.id);
-                        $('#complete_a').attr('href', '/counter-next/'+response.data.current_token.id+'/Completed');
-
                         if (response.data.current_token.is_x_ray===1)
                         {
+                            $('#next_a').show();
                             $('#next_a').attr('href', '/counter-next/'+response.data.current_token.id+'/next');
+                            $('#complete_a').hide();
                         }
                         else
                         {
+                            $('#complete_a').show();
                             $('#next_a').hide();
+                            $('#complete_a').attr('href', '/counter-next/'+response.data.current_token.id+'/Completed');
                         }
-                        
+                        $('#hold_a').attr('href', '/token-hold/'+response.data.current_token.id+'');
                         $('#next_reg').attr('action', '/counter-next/'+response.data.current_token.id+'/next');
                         
                     }
@@ -338,9 +347,7 @@
                 }
             });
         }
-       
         function token_list() {
-
             $.ajax({
                 url: '{{ route('counter_token_list_ajax') }}',
                 type: 'GET',
@@ -348,42 +355,52 @@
                     '_token': '{{ csrf_token() }}'
                 },
                 success: function(response) {
-
                     if(response.data.queue_token!=null)
                     {   
                         $("#token_list").html("");
+                        $('#hold_list').html("");
+                        var total_pendingCount=0;
+                        var hold_pendingCount=0;
                        for (var j = 0; j < response.data.queue_token.length; j++) {
-                        var cardDetails=response.data.queue_token[j];
+                                var cardDetails=response.data.queue_token[j];
                                 var div = $('<a>').addClass('custom-link');
                                 var card = $('<div>').addClass('card');
                                 card.attr('name', 'retoken');
                                 card.attr('value', cardDetails.id);
-                                card.attr('data-value', cardDetails.token_name);
-                                var cardBody = $('<div>').addClass('card-body');
-                                var cardTitle = $('<h3>').css({'text-align':'center'});
-                                var tokenDetails2=$('<p>').css({'text-align':'center','font-size':'17px'});
-                                var tokenStatus=$('<p>').css({'text-align':'center','font-size':'17px'});
+                                var cardBody = $('<div>').addClass('card-body').css({'padding':'0 10px 0 10px'});
+                                var cardTitle = $('<h4>').css({'text-align':'center','font-size':'20px'});
+                                var tokenDetails2=$('<p>').css({'text-align':'center','font-size':'14px'});
+                                var tokenStatus=$('<p>').addClass('card-text').css({'text-align':'center','font-size':'13px'});
                                 var tokenHead = $('<b>');
+                                var tokenHead2 = $('<b>');
+                                var tokenHead3 = $('<b>');
                                 cardTitle.append(tokenHead.text('Token: '),' '+cardDetails.token_name+'');
-                                tokenDetails2.append(('Type: '),' '+cardDetails.section+'');
+                                tokenDetails2.append(tokenHead3.text('Type: '),' '+cardDetails.section+'');
                                 tokenStatus.append((cardDetails.token_status));
                                 cardBody.append(cardTitle,tokenDetails2,tokenStatus);
                                 card.append(cardBody);
                                 div.append(card);
-                                $('#token_list').append(div);
-                                select_call();
+                                if(cardDetails.closed === 0)
+                                {
+                                    total_pendingCount+=1;
+                                    $('#token_list').append(div);
+                                }
+                                else
+                                {
+                                    hold_pendingCount+=1;
+                                    $('#hold_list').append(div);
+                                }
+                                
                        }
-                       $("#pendingCount").text('Total Pending : '+response.data.total_count)
+                       $("#total_pendingCount").text('Total Pending : '+total_pendingCount)
+                       $("#hold_pendingCount").text('Total Pending : '+hold_pendingCount)
                     }
-                    else{
-                        console.log(response.data);
-                    }
+                    select_call();
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr.responseText);
                 }
             });
-
         }
 
          function select_call(){
@@ -392,7 +409,6 @@
                             $('[name=retoken]').click(function(event) {
                             var nameValue = $(this).attr('value');
                             var tokenName = $(this).attr('data-value');
-                            
                             event.preventDefault();
                             swal({
                                 title: `Are you sure To call Token `+tokenName+` ?`,

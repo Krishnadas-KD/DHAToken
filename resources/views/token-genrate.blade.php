@@ -75,30 +75,18 @@
             </div>
         </div>
     </div>
-        <div class="row">
-            <div class="col-lg-12 equel-grid">
-                <div class="grid" >
-                    <p class="grid-header">Token List</p>
-                    <div class="grid-body" style="overflow-y: auto;max-height: 400px;">
-                        <div class="item-wrapper grid-container" id='token_list'>
-                            @foreach($cardsData as $card)
-                            <a  class="custom-link">
-                            <div class="card" value="{{$card['id']}}" name='retoken'>
-                                <div class="card-body">
-                                    <h3 style="text-align:center"><b>Token:</b> {{ $card['token_name'] }}</h3>
-                                    <p style="text-align:left;font-size:15px"><b>Time: </b> {{ \Carbon\Carbon::parse($card['created_at'])->format('Y-m-d H:i') }}</p>
-                                    <p style="text-align:left;font-size:15px"><b>Type:</b> {{ $card['section'] }}</p>
-                                    <p style="text-align:center;font-size:17px;"> <b> {{ $card['token_status'] }} </b> </p>
-                                     
-                                </div>
-                            </div>
-                            </a>
-                            @endforeach
-                        </div>
-                    </div>
+<div class="row">
+    <div class="col-lg-12 equel-grid">
+        <div class="grid" >
+            <p class="grid-header">Token List</p>
+            <div class="grid-body" style="overflow-y: auto;max-height: 400px;">
+                <div class="item-wrapper grid-container" id='token_list'>
+                    
+                </div>
             </div>
         </div>
     </div>
+</div>
 
 <div class="row d-none" id="print-div" style="margin:0px !important">
     <div style="border: 1px solid;  border-radius: 10px; ">
@@ -128,11 +116,11 @@
     </div>
 </div>
 
-
+</div>
 
 <style>
    
-    .grid-container {
+   .grid-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
         gap: 10px; 

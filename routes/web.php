@@ -99,6 +99,7 @@ Route::group(['middleware' => ['is_counter','auth'] ], function () {
     Route::post('/counter-next/call', [CounterUserController::class, 'counter_token_call'])->name('counter_token_call');
     Route::get('/counter-next/{id}/{next}', [CounterUserController::class, 'token_next'])->name('token_next');
     Route::get('/counter-cancel/{id}', [CounterUserController::class, 'token_cancel'])->name('token_cancel');
+    Route::get('/token-hold/{id}', [CounterUserController::class, 'token_hold_ajax'])->name('token_hold_ajax'); 
     Route::get('/counter-activate/{ativate}', [CounterUserController::class, 'counter_activate'])->name('counter_activate');
     Route::get('/counter-token-list', [CounterUserController::class, 'counter_token_list_ajax'])->name('counter_token_list_ajax');
     Route::get('/select-call-token/{id}', [CounterUserController::class, 'counter_token_select_call_ajax'])->name('counter_token_select_call_ajax');
