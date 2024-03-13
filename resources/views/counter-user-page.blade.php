@@ -44,7 +44,7 @@
                          <button id="complete_a" href="/counter-next/complete" class="btn btn-sm btn-success" style="padding:25px 39px 25px 39px; font-size:20px">Completed</button>
                          @endif
                          @if( $counter_user->service_name == 'Blood Collection'  )
-                         <button id="next_a" href="/counter-next/next" class="btn btn-sm btn-primary" style="padding:25px 39px 25px 39px; font-size:20px">Next</button>
+                         <button id="next_a" href="/counter-next/next" class="btn btn-sm btn-primary" style="padding:25px 39px 25px 39px; font-size:20px">X-Ray</button>
                          @endif
                          @if( $counter_user->service_name == 'Registration' )
                          <button class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#regModel" style="padding:25px 39px 25px 39px; font-size:20px">Next</button>
@@ -142,7 +142,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button  type="submit" class="btn btn-sm btn-success">Next</button>
+                    <button  type="submit" id="regNext" class="btn btn-sm btn-success">Next</button>
                 </div>
                 </form>
             </div>
@@ -187,6 +187,9 @@
         var isProcess=false;
         $('#complete_a').on('click',function()
         {
+          if (isProcess==false)
+            {
+           isProcess=true;
             var form_url = $(this).attr('href');
             $.ajax({
                 url: form_url,
@@ -197,25 +200,31 @@
                 success: function(response) {
                     if(response.data="Done")
                     {   
-                         isProcess=false;
+                        
                         refresh();
                         token_list();
+                         isProcess=false;
                     }
-                    else{
-                        console.log(response.data);
+                    else
+                    {
+                      isProcess=false;
                     }
                 },
-                error: function(xhr, status, error) {
-                    
-                    console.log(xhr.responseText);
+                error: function(error) {
+                    isProcess=false;
+                    console.log("error");
                 }
             });
-           
+            }
         });
 
 
         $('#next_a').on('click',function()
         {
+          if (isProcess==false)
+            {
+            isProcess=true;
+            
             var form_url = $(this).attr('href');
             $.ajax({
                 url: form_url,
@@ -226,23 +235,29 @@
                 success: function(response) {
                     if(response.data="Done")
                     {   
-                         isProcess=false;
+                         
                         refresh();
                         token_list();
+                        isProcess=false;
                     }
-                    else{
-                        console.log(response.data);
+                    else
+                    {
+                      isProcess=false;
                     }
                 },
-                error: function(xhr, status, error) {
-                    
-                    console.log(xhr.responseText);
+                error: function(error) {
+                    isProcess=false;
+                    console.log("error");
                 }
             });
+            }
            
         });
         $('#hold_a').on('click',function()
         {
+          if (isProcess==false)
+            {
+            isProcess=true;
             var form_url = $(this).attr('href');
             $.ajax({
                 url: form_url,
@@ -253,24 +268,37 @@
                 success: function(response) {
                     if(response.data="Done")
                     {   
-                        isProcess=false;
+                        
                         refresh();
                         token_list();
+                        isProcess=false;
+                        setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
                     }
-                    else{
-                        console.log(response.data);
+                    else
+                    {
+                        setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
+                      isProcess=false;
                     }
                 },
-                error: function(xhr, status, error) {
-                    
-                    console.log(xhr.responseText);
+                error: function( error) {
+                    isProcess=false;
+                    console.log("error");
                 }
             });
-           
+            }
         });
-
+        
+        $('#regNext').click(function() {
+        var loader = $('#loader');
+        // Toggle the visibility of the loader
+        loader.toggleClass('d-none');
+        // Hide the loader after 3 seconds (3000 milliseconds)
+        
+      });
         $('#next_token').on('click',function()
         {
+            $(this).prop('disabled', true);
+
             if (isProcess==false)
             {
                 isProcess=true;
@@ -284,16 +312,21 @@
                     success: function(response) {
                         if(response.data==="Done")
                         {   
+
                             refresh();
                             token_list();
+                            isProcess=false;
+                            
+                            $('#next_token').prop('disabled', false); 
+                                
                         }
                         else{
                             isProcess=false;
                         }
                     },
-                    error: function(xhr, status, error) {
-                        
-                        console.log(xhr.responseText);
+                    error: function( error) {
+                        isProcess=false;
+                        console.log("error");
                     }
                 });
          }
@@ -321,7 +354,7 @@
                         $('#type').text(response.data.current_token.type);
                         $('#section').text(response.data.current_token.section);
                         $('#cancel_form').attr('action', '/counter-cancel/'+response.data.current_token.id);
-                        if (response.data.current_token.is_x_ray===1 && response.data.current_token.section==='Blood Collection')
+                        if (response.data.current_token.is_x_ray===1 &&  response.data.current_token.service_name==='Blood Collection')
                         {
                             $('#next_a').show();
                             $('#next_a').attr('href', '/counter-next/'+response.data.current_token.id+'/next');
@@ -335,17 +368,19 @@
                         }
                         $('#hold_a').attr('href', '/token-hold/'+response.data.current_token.id+'');
                         $('#next_reg').attr('action', '/counter-next/'+response.data.current_token.id+'/next');
-                        
+                        loader.addClass("d-none");
                     }
                     else{
                         $('#not_empty').hide();
                         $('#empty').show();
+                        loader.addClass("d-none");
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    console.log("error");
                 }
             });
+            
         }
         function token_list() {
             $.ajax({
@@ -398,7 +433,7 @@
                     select_call();
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    console.log("error");
                 }
             });
         }
@@ -425,7 +460,7 @@
                                         refresh();
                                     },
                                     error: function(xhr, status, error) {
-                                        console.log(xhr.responseText);
+                                        console.log("error");
                                     }
                                 });
                                 }
