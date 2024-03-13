@@ -211,23 +211,9 @@
 <script>
   $(document).ready(function() {
     $('#cadRow').empty();
-    for(i=0;i<30;i++)
-    {
-              var div = $('<div>').addClass('col-lg-4');
-              var card = $('<div>').addClass('card mb-3');
-              var cardBody = $('<div>').addClass('card-body');
-              var tokeSpan = $('<h3>').addClass('card-title').text('No Counter');
-              cardBody.append(tokeSpan);
-              card.append(cardBody);
-              div.append(card);
-              $('#cadRow').append(div);
-    }
-
-
 
        var textArray = [];
         var counters = [];
-        var textContainer = document.getElementById("massegeDisplay");
         var currentIndex = 0;
         function swapText() {
           for (var j = 0; j < counters.length; j++) {
@@ -242,20 +228,19 @@
             for (var j = 0; j < counters.length; j++) {
               if(counters[j].type==='display' && counters[j].token!=null)
               {
-                 $('#massegeDisplay').text('TOKEN '+counters[j].token+' PLEASE PROCEED TO COUNTER '+ counters[j].counter);
                   counters[j].type='old';
-                    if ('speechSynthesis' in window) {
-                      var msg = new SpeechSynthesisUtterance();
-                        var voices = window.speechSynthesis.getVoices();
-                        if (voices && voices.length > 0) {
-                            msg.voice = voices[0]; 
-                            msg.text = 'TOKEN '+counters[j].token+' PLEASE PROCEED TO COUNTER '+ counters[j].counter;
-                            window.speechSynthesis.speak(msg);
-                        }
+                  //   if ('speechSynthesis' in window) {
+                  //     var msg = new SpeechSynthesisUtterance();
+                  //       var voices = window.speechSynthesis.getVoices();
+                  //       if (voices && voices.length > 0) {
+                  //           msg.voice = voices[0]; 
+                  //           msg.text = 'TOKEN '+counters[j].token+' PLEASE PROCEED TO COUNTER '+ counters[j].counter;
+                  //           window.speechSynthesis.speak(msg);
+                  //       }
                        
-                  } else {
-                      console.error('Speech synthesis not supported');
-                  }
+                  // } else {
+                  //     console.error('Speech synthesis not supported');
+                  // }
                   
                  break;
               }
@@ -263,7 +248,7 @@
 
 
         }
-        var  intervalId=setInterval(swapText, 3000); // Swap text every 2 seconds (2000 milliseconds)
+        var  intervalId=setInterval(swapText, 5000); // Swap text every 5 seconds (5000 milliseconds)
         function refresh() {
             $.ajax({
                 url: '{{$ajxa_url}}',
@@ -307,7 +292,6 @@
                                           {
                                               counters[j].token = item.token_name;
                                               counters[j].type='new';
-                                              
                                           }
                                           no_counter=false;
                                           break; 
@@ -328,7 +312,7 @@
                           }
                           else{
 
-                                      // Process each item here
+                                      // empty counter
                                       var div = $('<div>').addClass('col-lg-6 d-flex justify-content-center align-items-center');
                                       var card = $('<div>').addClass('cardnull');
                                       var cardBody = $('<div>').addClass('card-body').css({'padding-bottom': '0px','padding-top': '0px'});
@@ -387,7 +371,7 @@
                    }
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    console.log("error");
                 }
             });
         }

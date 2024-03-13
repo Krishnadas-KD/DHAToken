@@ -37,6 +37,12 @@ class ChartController extends Controller
                      ->whereDate('created_at', $post_date)
                      ->where('service_name', 'Registration')
                      ->where('status', 'like', 'In%')
+                     ->whereNotExists(function ($query) {
+                          $query->select(DB::raw(1))
+                                ->from('token_details')
+                                ->whereColumn('token_details.id', 'token_workflows.token_id')
+                                ->where('token_status', 'Canceled');
+                      })
                      ->groupByRaw('HOUR(created_at)')->get();
 
 
@@ -56,7 +62,7 @@ class ChartController extends Controller
             ->groupByRaw('HOUR(created_at)')->get();
 
 
-             $data=['total'=> $this->hourAdder($hourlyData),'registration'=>$this->hourAdder($Registration),'blood'=> $this->hourAdder($Blood_Col)];
+             $data=['total'=> $this->hourAdder($hourlyData),'registration'=>$this->hourAdder($Registration),'blood'=> $this->hourAdder($Blood_Col),'x_ray'=> $this->hourAdder($X_ray)];
             return response()->json(['message' => 'Success', 'data' => $data]);
         }
         catch (\Exception $e) {

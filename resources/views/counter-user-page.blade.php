@@ -221,6 +221,7 @@
 
         $('#next_a').on('click',function()
         {
+
           if (isProcess==false)
             {
             isProcess=true;
@@ -239,6 +240,7 @@
                         refresh();
                         token_list();
                         isProcess=false;
+                        
                     }
                     else
                     {
@@ -272,11 +274,9 @@
                         refresh();
                         token_list();
                         isProcess=false;
-                        setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
                     }
                     else
                     {
-                        setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
                       isProcess=false;
                     }
                 },
@@ -298,7 +298,6 @@
         $('#next_token').on('click',function()
         {
             $(this).prop('disabled', true);
-
             if (isProcess==false)
             {
                 isProcess=true;
@@ -317,11 +316,12 @@
                             token_list();
                             isProcess=false;
                             
-                            $('#next_token').prop('disabled', false); 
-                                
+                            setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
                         }
                         else{
                             isProcess=false;
+                            
+                            setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
                         }
                     },
                     error: function( error) {
@@ -368,19 +368,17 @@
                         }
                         $('#hold_a').attr('href', '/token-hold/'+response.data.current_token.id+'');
                         $('#next_reg').attr('action', '/counter-next/'+response.data.current_token.id+'/next');
-                        loader.addClass("d-none");
+                        
                     }
                     else{
                         $('#not_empty').hide();
                         $('#empty').show();
-                        loader.addClass("d-none");
                     }
                 },
                 error: function(xhr, status, error) {
                     console.log("error");
                 }
             });
-            
         }
         function token_list() {
             $.ajax({
@@ -436,6 +434,8 @@
                     console.log("error");
                 }
             });
+            
+         setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
         }
 
          function select_call(){

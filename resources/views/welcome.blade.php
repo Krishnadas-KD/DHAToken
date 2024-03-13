@@ -15,29 +15,40 @@
 
   <div class="col-sm-2">
     <div class="card">
-      <div class="card-body" style="background-color:rgba(30, 30, 255, 1);border-color:rgba(100, 100, 255, 1);border-radius:10px">
+      <div class="card-body" style="background-color:rgb(99,110,250);border-color:rgba(100, 100, 255, 1);border-radius:10px">
         <h3 style="text-align:center;">Issued</h3>
         <h2  style="text-align:center;"><b id="total_issued">0</b></h2>
       </div>
     </div>
   </div>
+
   <div class="col-sm-2">
     <div class="card">
-      <div class="card-body" style="background-color:rgba(30, 255, 20, 1);border-color:rgba(100, 255, 100, 1);border-radius:10px">
+      <div class="card-body" style="background-color:rgb(0,204,150);border-color:rgba(100, 255, 100, 1);border-radius:10px">
         <h3 style="text-align:center;">Registration</h3>
         <h2  style="text-align:center;"><b id="total_registred">0</b></h2>
       </div>
     </div>
   </div>
 
-    <div class="col-sm-2">
+   <div class="col-sm-2">
     <div class="card">
-      <div class="card-body" style="background-color:rgba(255, 30, 30, 1);border-color:rgba(255, 100, 100, 1);border-radius:10px">
+      <div class="card-body" style="background-color:rgb(239,85,59);border-color:rgba(255, 100, 100, 1);border-radius:10px">
         <h3 style="text-align:center;">Blood Collection</h3>
         <h2  style="text-align:center;"><b id="total_blood">0</b></h2>
       </div>
     </div>
   </div>
+
+<div class="col-sm-2">
+    <div class="card">
+      <div class="card-body" style="background-color:rgb(255,161,90);border-color:rgb(255,161,255);border-radius:10px">
+        <h3 style="text-align:center;">X-Ray</h3>
+        <h2  style="text-align:center;"><b id="total_xray">0</b></h2>
+      </div>
+    </div>
+  </div>
+
 
   </div>
 
@@ -100,7 +111,7 @@
         const totalCounts = dataPoint.total.map(item => item.count);
         const registerCounts = dataPoint.registration.map(item => item.count);
         const bloodCounts = dataPoint.blood.map(item => item.count);
-        //const x_rayCounts = dataPoint.x_ray.map(item => item.count);
+        const x_rayCounts = dataPoint.x_ray.map(item => item.count);
         const ctx = document.getElementById('myChart').getContext('2d');
         if (myChart) {
             myChart.destroy();
@@ -112,20 +123,26 @@
                 datasets: [{
                     label: 'Issued',
                     data: totalCounts,
-                    backgroundColor: 'rgba(00, 00, 255, 1)',
+                    backgroundColor: 'rgb(99,110,250)',
                     borderColor: 'rgba(40, 40, 251, .8)',
                     borderWidth: 1,
                 },{
                     label: 'Register',
                     data: registerCounts,
-                    backgroundColor: 'rgba(00, 255, 00, 1)',
+                    backgroundColor: 'rgb(0,204,150)',
                     borderColor: 'rgba(40, 255, 40, .8)',
                     borderWidth: 1
                 },{
                     label: 'Blood Collection',
                     data: bloodCounts,
-                    backgroundColor: 'rgba(255, 00, 00, 1)',
+                    backgroundColor: 'rgb(239,85,59)',
                     borderColor: 'rgba(255, 40, 40, .8)',
+                    borderWidth: 1
+                },{
+                    label: 'X-Ray',
+                    data: x_rayCounts,
+                    backgroundColor: 'rgb(255,161,90)',
+                    borderColor: 'rgb(255,161,255,.8)',
                     borderWidth: 1
                 }]
             },
@@ -155,9 +172,13 @@
         const registerSum = registerCounts.reduce((x, count) => x + count, 0);
 
         const bloodSum = bloodCounts.reduce((x, count) => x + count, 0);
+
+        const xraySum = x_rayCounts.reduce((x, count) => x + count, 0);
+
         $("#total_issued").text(totalSum);
         $("#total_registred").text(registerSum);
         $("#total_blood").text(bloodSum);
+          $("#total_xray").text(xraySum);
 
 
     }
