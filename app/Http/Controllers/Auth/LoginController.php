@@ -41,25 +41,6 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        if($user->type==='Counter')
-        {
-            $counter_user = DB::table('counter_services')
-            ->select('counters.id')
-            ->join('counters', 'counter_services.counter_id', '=', 'counters.id')
-            ->join('user_counters', 'user_counters.counter_id', '=', 'counters.id')
-            ->join('users', 'users.id', '=', 'user_counters.user_id')
-            ->join('services', 'counter_services.service_id', '=', 'services.id')
-            ->where('users.id', '=', $user->id)
-            ->first();
-            $counter_id=$counter_user->id;
-        
-            DB::table('counters')
-                ->where('id', $counter_id)
-                ->update(['is_active' => '1']);
-            DB::table('counters')
-                ->where('id', $counter_id)
-                ->update(['is_bussy' => '0']);
-        }
         if ($user->type==='Admin') {
             // Authentication passed for admin user
             return redirect('/home');
@@ -88,19 +69,9 @@ class LoginController extends Controller
         if ($user) {
             if($user->type==='Counter')
             {
-                $counter_user = DB::table('counter_services')
-                ->select('counters.id')
-                ->join('counters', 'counter_services.counter_id', '=', 'counters.id')
-                ->join('user_counters', 'user_counters.counter_id', '=', 'counters.id')
-                ->join('users', 'users.id', '=', 'user_counters.user_id')
-                ->join('services', 'counter_services.service_id', '=', 'services.id')
-                ->where('users.id', '=', $user->id)
-                ->first();
-                $counter_id=$counter_user->id;
-                
-                DB::table('counters')
-                    ->where('id', $counter_id)
-                    ->update(['is_active' => '0']);
+                DB::table('user_counters')
+                    ->where('user_id', $user->id)
+                    ->update(['counter_id' => null]);
             }
         }
         $this->guard()->logout();

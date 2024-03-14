@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\TokenDetails;
 use App\Models\TokenSeries;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TokenController extends Controller
 {
     public function token_index()
     {
         $tokenDetails = TokenDetails::where('closed', '=', '0')->get();
-        $data = ['cardsData' => $tokenDetails];
+        $section=TokenSeries::select('section')->distinct()->get();
+        $type=TokenSeries::select('type')->distinct()->get();
+        $data = ['cardsData' => $tokenDetails,'section'=>$section,'type'=>$type];
         return view('token-genrate', $data);
     }
 
@@ -26,6 +29,7 @@ class TokenController extends Controller
         $type=request('type');
         $section=request('section');
         $qry = TokenSeries::where('section', $section)
+        ->where('type', $type)
         ->first();
         
         if ($qry) {
@@ -34,8 +38,9 @@ class TokenController extends Controller
                 $random_number = rand(10, 100);
             }
             $next_series = $qry->abbr . ($qry->current_sq+1 +($random_number));
-            $qry->current_sq = $qry->current_sq + 1 +($random_number);
-            $qry->save();            
+            TokenSeries::where('abbr', $qry->abbr)
+            ->where('section', $qry->section)
+            ->update(['current_sq' => $qry->current_sq+1 +($random_number)]);
         } else {
             $next_series = null;
         }

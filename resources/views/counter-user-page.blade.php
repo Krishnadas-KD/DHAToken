@@ -44,7 +44,7 @@
                          <button id="complete_a" href="/counter-next/complete" class="btn btn-sm btn-success" style="padding:25px 39px 25px 39px; font-size:20px">Completed</button>
                          @endif
                          @if( $counter_user->service_name == 'Blood Collection'  )
-                         <button id="next_a" href="/counter-next/next" class="btn btn-sm btn-primary" style="padding:25px 39px 25px 39px; font-size:20px">Next</button>
+                         <button id="next_a" href="/counter-next/next" class="btn btn-sm btn-primary" style="padding:25px 39px 25px 39px; font-size:20px">X-Ray</button>
                          @endif
                          @if( $counter_user->service_name == 'Registration' )
                          <button class="btn btn-sm btn-primary"  data-toggle="modal" data-target="#regModel" style="padding:25px 39px 25px 39px; font-size:20px">Next</button>
@@ -78,7 +78,7 @@
 
     <div class="col-lg-6 equel-grid">
         <div class="grid" >
-            <p class="grid-header">Hold List  <span style=" float: right;" id="hold_pendingCount">Total Pending:</span></p>
+            <p class="grid-header">Hold List  <span style=" float: right;" id="hold_pendingCount">Total Count:</span></p>
             <div class="grid-body" style="overflow-y: auto;max-height: 500px;">
                 <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"  id='hold_list'>
                     
@@ -86,7 +86,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 </div>
@@ -142,7 +141,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button  type="submit" class="btn btn-sm btn-success">Next</button>
+                    <button  type="submit" id="regNext" class="btn btn-sm btn-success">Next</button>
                 </div>
                 </form>
             </div>
@@ -187,6 +186,7 @@
         var isProcess=false;
         $('#complete_a').on('click',function()
         {
+           isProcess=true;
             var form_url = $(this).attr('href');
             $.ajax({
                 url: form_url,
@@ -197,17 +197,11 @@
                 success: function(response) {
                     if(response.data="Done")
                     {   
-                         isProcess=false;
                         refresh();
-                        token_list();
-                    }
-                    else{
-                        console.log(response.data);
                     }
                 },
-                error: function(xhr, status, error) {
-                    
-                    console.log(xhr.responseText);
+                error: function(error) {
+                    console.log("error");
                 }
             });
            
@@ -215,7 +209,7 @@
 
 
         $('#next_a').on('click',function()
-        {
+        {            
             var form_url = $(this).attr('href');
             $.ajax({
                 url: form_url,
@@ -226,21 +220,16 @@
                 success: function(response) {
                     if(response.data="Done")
                     {   
-                         isProcess=false;
+                         
                         refresh();
-                        token_list();
-                    }
-                    else{
-                        console.log(response.data);
                     }
                 },
-                error: function(xhr, status, error) {
-                    
-                    console.log(xhr.responseText);
+                error: function(error) {
+                    console.log("error");
                 }
             });
-           
         });
+
         $('#hold_a').on('click',function()
         {
             var form_url = $(this).attr('href');
@@ -252,28 +241,24 @@
                 },
                 success: function(response) {
                     if(response.data="Done")
-                    {   
-                        isProcess=false;
+                    {
                         refresh();
-                        token_list();
-                    }
-                    else{
-                        console.log(response.data);
                     }
                 },
-                error: function(xhr, status, error) {
-                    
-                    console.log(xhr.responseText);
+                error: function( error) {
+                    isProcess=false;
                 }
             });
-           
         });
+        
+        $('#regNext').click(function() {
+            var loader = $('#loader');
+            loader.toggleClass('d-none');
+        });
+
 
         $('#next_token').on('click',function()
         {
-            if (isProcess==false)
-            {
-                isProcess=true;
                 var formId = $(this).closest('form').attr('id');
                 $.ajax({
                     url: '/counter-next/call',
@@ -285,18 +270,12 @@
                         if(response.data==="Done")
                         {   
                             refresh();
-                            token_list();
-                        }
-                        else{
-                            isProcess=false;
                         }
                     },
-                    error: function(xhr, status, error) {
-                        
-                        console.log(xhr.responseText);
+                    error: function( error) {
+                        console.log("error");
                     }
                 });
-         }
          token_list();
         });
 
@@ -321,7 +300,7 @@
                         $('#type').text(response.data.current_token.type);
                         $('#section').text(response.data.current_token.section);
                         $('#cancel_form').attr('action', '/counter-cancel/'+response.data.current_token.id);
-                        if (response.data.current_token.is_x_ray===1 && response.data.current_token.section==='Blood Collection')
+                        if (response.data.current_token.is_x_ray===1 &&  response.data.current_token.service_name==='Blood Collection')
                         {
                             $('#next_a').show();
                             $('#next_a').attr('href', '/counter-next/'+response.data.current_token.id+'/next');
@@ -343,7 +322,7 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    console.log("error");
                 }
             });
         }
@@ -393,15 +372,15 @@
                                 
                        }
                        $("#total_pendingCount").text('Total Pending : '+total_pendingCount)
-                       $("#hold_pendingCount").text('Total Pending : '+hold_pendingCount)
+                       $("#hold_pendingCount").text('Total Count : '+hold_pendingCount)
                     }
                     select_call();
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    console.log("error");
                 }
             });
-        }
+         }
 
          function select_call(){
                 if($("#empty").is(":visible"))
@@ -425,14 +404,13 @@
                                         refresh();
                                     },
                                     error: function(xhr, status, error) {
-                                        console.log(xhr.responseText);
+                                        console.log("error");
                                     }
                                 });
                                 }
                             });
                         });    
             }
-               
         }
 
     });

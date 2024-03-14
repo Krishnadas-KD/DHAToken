@@ -75,7 +75,7 @@
                     </div>
                     <div class="dropdown-menu" aria-labelledby="profileDropdown">
                     @if(auth()->user()->is_admin == 1)
-                        <a class="dropdown-item" href="{{ url('/display') }}">Switch User</a>
+                        <a class="dropdown-item" href="{{ url('/display') }}">Display</a>
                     
                         @endif
           
