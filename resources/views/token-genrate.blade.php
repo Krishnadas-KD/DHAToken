@@ -18,13 +18,12 @@
                         @csrf  
                                 <label for="counter_type">Counter Type</label>
                                 <div class="btn-group" role="group" aria-label="Gender Selection" style="width:100%;">
-                                <input type="button" style="margin-right:10px" class="btn btn-primary" id="newBtn_male" name="NEW" value="NEW">
-                                <input type="button"  style="margin-left:10px" class="btn btn-primary" id="renewBtn_male" name="RENEW" value="RENEW">
                                 </div>
                                     <div class="form-group">
-                                        <select hidden class="form-control" name="counter_type">
-                                            <option value="NEW">NEW</option>
-                                            <option value="RENEW">RENEW</option>
+                                        <select  class="form-control counter_type"  name="counter_type">
+                                        @foreach ($type as $s)
+                                                <option value="{{$s->type}}">{{$s->type}}</option>
+                                        @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -32,7 +31,6 @@
                                         
                                         <select  hidden   class="form-control" name="counter_section" >
                                             <option value="MALE" selected>MALE</option>
-                                            <option value="FEMALE">FEMALE</option>
                                         </select>
                                     </div>
                         <button type="button" name="printToken" style="width:100%;font-size:20px" class="btn btn-sm btn-primary">Save & Print</button>
@@ -55,7 +53,7 @@
                                 <input type="button"  style="margin-left:10px" class="btn btn-primary" id="renewBtn_female" name="RENEW" value="RENEW">
                                 </div>
                                     <div class="form-group">
-                                        <select hidden class="form-control" name="counter_type">
+                                        <select  class="form-control counter_type" name="counter_type">
                                             <option value="NEW">NEW</option>
                                             <option value="RENEW">RENEW</option>
                                         </select>
@@ -64,7 +62,6 @@
                                        <label for="counter_section">Counter Section:<b style="font-size:17px;font-family: 'Times New Roman', Times, serif;" >FEMALE</b></label>
                                         
                                         <select  hidden   class="form-control" name="counter_section" >
-                                            <option value="MALE">MALE</option>
                                             <option value="FEMALE" selected>FEMALE</option>
                                         </select>
                                     </div>
@@ -139,6 +136,18 @@
         border: 2px solid #000;
 
     }
+    
+
+    .form-control.counter_type
+    {
+        display: inline-block;
+    }
+
+    .form-control.counter_type option {
+    background-color: black; /* Background color of options */
+    color: white;
+    display: inline-block;
+}
    
     </style>
 @stop
@@ -149,34 +158,6 @@
 
 <script>
     $(document).ready(function() {
-       
-        $('#newBtn_male').on('click',function()
-        {
-               $('#token_male select[name="counter_type"]').val(this.value);
-               $('#renewBtn_male').css('background-color', '#696ffb');
-               $('#newBtn_male').css('background-color', '#45d65a');
-        });
-        $('#renewBtn_male').on('click',function()
-        {
-               $('#token_male select[name="counter_type"]').val(this.value);
-               $('#newBtn_male').css('background-color', '#696ffb');
-               $('#renewBtn_male').css('background-color', '#45d65a');
-        });
-        
-        $('#newBtn_female').on('click',function()
-        {
-               $('#token_female select[name="counter_type"]').val(this.value);
-               $('#renewBtn_female').css('background-color', '#696ffb');
-               $('#newBtn_female').css('background-color', '#45d65a');
-        });
-        $('#renewBtn_female').on('click',function()
-        {
-               $('#token_female select[name="counter_type"]').val(this.value);
-               $('#newBtn_female').css('background-color', '#696ffb');
-               $('#renewBtn_female').css('background-color', '#45d65a');
-        });
-        
-        
         $('button[name="printToken"]').on('click',function()
         {
             var formId = $(this).closest('form').attr('id');

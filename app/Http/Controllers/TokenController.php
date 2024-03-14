@@ -14,7 +14,9 @@ class TokenController extends Controller
     public function token_index()
     {
         $tokenDetails = TokenDetails::where('closed', '=', '0')->get();
-        $data = ['cardsData' => $tokenDetails];
+        $section=TokenSeries::select('section')->distinct()->get();
+        $type=TokenSeries::select('type')->distinct()->get();
+        $data = ['cardsData' => $tokenDetails,'section'=>$section,'type'=>$type];
         return view('token-genrate', $data);
     }
 

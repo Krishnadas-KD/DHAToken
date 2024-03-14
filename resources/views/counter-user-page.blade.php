@@ -187,8 +187,6 @@
         var isProcess=false;
         $('#complete_a').on('click',function()
         {
-          if (isProcess==false)
-            {
            isProcess=true;
             var form_url = $(this).attr('href');
             $.ajax({
@@ -200,32 +198,19 @@
                 success: function(response) {
                     if(response.data="Done")
                     {   
-                        
                         refresh();
-                        token_list();
-                         isProcess=false;
-                    }
-                    else
-                    {
-                      isProcess=false;
                     }
                 },
                 error: function(error) {
-                    isProcess=false;
                     console.log("error");
                 }
             });
-            }
+           
         });
 
 
         $('#next_a').on('click',function()
-        {
-
-          if (isProcess==false)
-            {
-            isProcess=true;
-            
+        {            
             var form_url = $(this).attr('href');
             $.ajax({
                 url: form_url,
@@ -238,28 +223,16 @@
                     {   
                          
                         refresh();
-                        token_list();
-                        isProcess=false;
-                        
-                    }
-                    else
-                    {
-                      isProcess=false;
                     }
                 },
                 error: function(error) {
-                    isProcess=false;
                     console.log("error");
                 }
             });
-            }
-           
         });
+
         $('#hold_a').on('click',function()
         {
-          if (isProcess==false)
-            {
-            isProcess=true;
             var form_url = $(this).attr('href');
             $.ajax({
                 url: form_url,
@@ -269,38 +242,24 @@
                 },
                 success: function(response) {
                     if(response.data="Done")
-                    {   
-                        
-                        refresh();
-                        token_list();
-                        isProcess=false;
-                    }
-                    else
                     {
-                      isProcess=false;
+                        refresh();
                     }
                 },
                 error: function( error) {
                     isProcess=false;
-                    console.log("error");
                 }
             });
-            }
         });
         
         $('#regNext').click(function() {
-        var loader = $('#loader');
-        // Toggle the visibility of the loader
-        loader.toggleClass('d-none');
-        // Hide the loader after 3 seconds (3000 milliseconds)
-        
-      });
+            var loader = $('#loader');
+            loader.toggleClass('d-none');
+        });
+
+
         $('#next_token').on('click',function()
         {
-            $(this).prop('disabled', true);
-            if (isProcess==false)
-            {
-                isProcess=true;
                 var formId = $(this).closest('form').attr('id');
                 $.ajax({
                     url: '/counter-next/call',
@@ -311,25 +270,13 @@
                     success: function(response) {
                         if(response.data==="Done")
                         {   
-
                             refresh();
-                            token_list();
-                            isProcess=false;
-                            
-                            setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
-                        }
-                        else{
-                            isProcess=false;
-                            
-                            setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
                         }
                     },
                     error: function( error) {
-                        isProcess=false;
                         console.log("error");
                     }
                 });
-         }
          token_list();
         });
 
@@ -434,9 +381,7 @@
                     console.log("error");
                 }
             });
-            
-         setTimeout(function() {$('#next_token').prop('disabled', false); }, 5000);
-        }
+         }
 
          function select_call(){
                 if($("#empty").is(":visible"))
@@ -467,7 +412,6 @@
                             });
                         });    
             }
-               
         }
 
     });

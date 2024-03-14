@@ -86,6 +86,7 @@ class CounterUserController extends Controller
     {
         try{
             //db start
+            DB::beginTransaction();
             $user = Auth::user();
 
             $current_token = DB::table('token_workflows')
@@ -123,6 +124,18 @@ class CounterUserController extends Controller
             } else {
                 $status = "Unknown Service";
             }
+
+            $flow_existe=TokenWorkFlows::select('id')
+                ->where('status','=',$status)
+                ->where('token_id','=',$current_token->token_id)
+                ->where('service_name','=',$service_name)
+                ->first();
+            
+            if($flow_existe!=null)
+            {
+                throw new Exception("Value is null");
+            }
+
             if ( $status=="Completed") {
                  TokenWorkFlows::create([
                     'token_name' => $current_token->token_name,
@@ -165,11 +178,10 @@ class CounterUserController extends Controller
                     ->update(['is_closed' => '1']);
             
             }
-            
+            DB::commit();
             return redirect()->route('counter_user_index');
         }
         catch (Exception $e) {
-            // Rollback the transaction if an error occurs
             DB::rollBack();
             return redirect()->route('counter_user_index');
         }
@@ -261,6 +273,7 @@ class CounterUserController extends Controller
 
     public function counter_token_call(Request $request)
     {
+
         try{
 
             DB::beginTransaction();
@@ -280,7 +293,20 @@ class CounterUserController extends Controller
             $counter_section=$counter_user->counter_section;
             $service_name=$counter_user->service_name;
             $service_time=$counter_user->service_time;
+          
 
+            $counter_token_exists= TokenWorkFlows::select('token_name')
+                ->where('counter_number','=',$counter_number)
+                ->where('service_name','=',$service_name)
+                ->where('status','like','In%')
+                ->where('is_closed','=',0)
+                ->first();
+
+            
+            if ($counter_token_exists!=null){
+                
+                throw new Exception("Value is null");
+            } 
             $status="Pending ".$service_name;
 
             $token = TokenDetails::select('id', 'token_name', 'type', 'section', 'token_status')
@@ -316,10 +342,7 @@ class CounterUserController extends Controller
                 return response()->json(['message' => 'Success', 'data' => 'Done']);
 
             }
-            else{
-                DB::commit();
-            }
-
+            DB::commit();
             return response()->json(['message' => 'No data', 'data' => 'None']);
         }
         catch (Exception $e) {
