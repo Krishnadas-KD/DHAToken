@@ -95,6 +95,8 @@ Route::group(['middleware' => ['is_admin', 'auth']], function () {
 
 Route::group(['middleware' => ['is_counter','auth'] ], function () {
     Route::get('/counter-home', [CounterUserController::class, 'counter_user_index'])->name('counter_user_index');
+    Route::post('/counter-selected', [CounterUserController::class, 'counter_selected'])->name('counter_selected');
+    Route::get('/counter-user-token', [CounterUserController::class, 'counter_user_token_call'])->name('counter_user_token_call');
     Route::post('/counter-refresh', [CounterUserController::class, 'counter_user_refreshcall'])->name('counter_user_refreshcall');
     Route::post('/counter-next/call', [CounterUserController::class, 'counter_token_call'])->name('counter_token_call');
     Route::get('/counter-next/{id}/{next}', [CounterUserController::class, 'token_next'])->name('token_next');

@@ -78,7 +78,7 @@
 
     <div class="col-lg-6 equel-grid">
         <div class="grid" >
-            <p class="grid-header">Hold List  <span style=" float: right;" id="hold_pendingCount">Total Pending:</span></p>
+            <p class="grid-header">Hold List  <span style=" float: right;" id="hold_pendingCount">Total Count:</span></p>
             <div class="grid-body" style="overflow-y: auto;max-height: 500px;">
                 <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"  id='hold_list'>
                     
@@ -86,7 +86,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 </div>
@@ -373,7 +372,7 @@
                                 
                        }
                        $("#total_pendingCount").text('Total Pending : '+total_pendingCount)
-                       $("#hold_pendingCount").text('Total Pending : '+hold_pendingCount)
+                       $("#hold_pendingCount").text('Total Count : '+hold_pendingCount)
                     }
                     select_call();
                 },

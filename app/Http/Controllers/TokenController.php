@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\TokenDetails;
 use App\Models\TokenSeries;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TokenController extends Controller
 {
@@ -28,6 +29,7 @@ class TokenController extends Controller
         $type=request('type');
         $section=request('section');
         $qry = TokenSeries::where('section', $section)
+        ->where('type', $type)
         ->first();
         
         if ($qry) {
@@ -36,8 +38,9 @@ class TokenController extends Controller
                 $random_number = rand(10, 100);
             }
             $next_series = $qry->abbr . ($qry->current_sq+1 +($random_number));
-            $qry->current_sq = $qry->current_sq + 1 +($random_number);
-            $qry->save();            
+            TokenSeries::where('abbr', $qry->abbr)
+            ->where('section', $qry->section)
+            ->update(['current_sq' => $qry->current_sq+1 +($random_number)]);
         } else {
             $next_series = null;
         }

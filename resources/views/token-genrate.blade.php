@@ -17,10 +17,8 @@
                         <form id="token_male">
                         @csrf  
                                 <label for="counter_type">Counter Type</label>
-                                <div class="btn-group" role="group" aria-label="Gender Selection" style="width:100%;">
-                                </div>
-                                    <div class="form-group">
-                                        <select  class="form-control counter_type"  name="counter_type">
+                                    <div class="counter-type">
+                                        <select size="{{count($type)}}"  name="counter_type">
                                         @foreach ($type as $s)
                                                 <option value="{{$s->type}}">{{$s->type}}</option>
                                         @endforeach
@@ -49,15 +47,14 @@
                         @csrf  
                                 <label for="counter_type">Counter Type</label>
                                 <div class="btn-group" role="group" aria-label="Gender Selection" style="width:100%;">
-                                <input type="button" style="margin-right:10px" class="btn btn-primary" id="newBtn_female" name="NEW" value="NEW">
-                                <input type="button"  style="margin-left:10px" class="btn btn-primary" id="renewBtn_female" name="RENEW" value="RENEW">
                                 </div>
-                                    <div class="form-group">
-                                        <select  class="form-control counter_type" name="counter_type">
-                                            <option value="NEW">NEW</option>
-                                            <option value="RENEW">RENEW</option>
-                                        </select>
-                                    </div>
+                                <div class="counter-type">
+                                    <select size="{{count($type)}}"  name="counter_type">
+                                    @foreach ($type as $s)
+                                            <option value="{{$s->type}}">{{$s->type}}</option>
+                                    @endforeach
+                                    </select>
+                                </div>
                                     <div class="form-group">
                                        <label for="counter_section">Counter Section:<b style="font-size:17px;font-family: 'Times New Roman', Times, serif;" >FEMALE</b></label>
                                         
@@ -107,16 +104,12 @@
             </p>
             
         </div>
-        <br>
-            <br>
-            <br>
+        <br><br><br>
     </div>
 </div>
-
 </div>
 
 <style>
-   
    .grid-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
@@ -134,21 +127,46 @@
         background-color: #d5f9fa;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         border: 2px solid #000;
-
     }
-    
-
-    .form-control.counter_type
-    {
-        display: inline-block;
-    }
-
-    .form-control.counter_type option {
-    background-color: black; /* Background color of options */
-    color: white;
-    display: inline-block;
-}
    
+  
+    .counter-type {
+        display:inline-block;
+        vertical-align:top;
+        overflow:hidden;
+        width: 100%;
+        height: 70px;
+        text-align: center; 
+    }  
+    .counter-type select {
+        background-color: transparent;
+        border: 0;
+        padding:10px;
+        margin:-5px -50px -5px -5px;
+        width: inherit;
+        height: inherit;
+        overflow:hidden; 
+        cursor: pointer;
+        
+    }
+    .counter-type select option {
+        display: inline-block;
+        background-color:#141881 ;
+        padding: 10px;
+        margin: 10px;
+        font-weight: bold;
+        color: #fff;
+        border-radius: 5px; 
+        transition: background-color 0.2s ease-in-out;
+        
+
+    }
+    .counter-type select option:checked {
+    background-color: #1867d3;
+    }
+  
+
+    
     </style>
 @stop
 @section('script')
@@ -158,6 +176,7 @@
 
 <script>
     $(document).ready(function() {
+        refresh();
         $('button[name="printToken"]').on('click',function()
         {
             var formId = $(this).closest('form').attr('id');
@@ -246,6 +265,11 @@
         }
       setInterval(
         function () {
+            refresh()
+        }, 8000);
+
+        function refresh()
+        {
             $.ajax({
                 url: '/token-list',
                 type: 'GET',
@@ -289,8 +313,7 @@
                     console.log(xhr.responseText);
                 }
             });
-
-        }, 8000);
+        }
 
     });
 </script>

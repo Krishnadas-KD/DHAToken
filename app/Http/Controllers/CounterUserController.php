@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TokenDetails;
 use App\Models\TokenWorkflows;
+use App\Models\Counter;
+use App\Models\UserCounter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +16,76 @@ class CounterUserController extends Controller
 {
     public function counter_user_index()
     {
+        $counters = Counter::select('id', 'counter_name', 'counter_number', 'counter_section')
+                        ->selectSub(function ($query) {
+                            $query->select('service_name')
+                                ->from('counter_services')
+                                ->join('services', 'services.id', '=', 'counter_services.service_id')
+                                ->whereColumn('counter_services.counter_id', 'counters.id')
+                                ->limit(1);
+                        }, 'service')
+                        ->selectSub(function ($query) {
+                            $query->select('users.name')
+                                ->from('user_counters')
+                                ->join('users', 'users.id', '=', 'user_counters.user_id')
+                                ->whereColumn('user_counters.counter_id', 'counters.id')
+                                ->limit(1);
+                        }, 'counter_user')
+                        ->get();
+        $data = ['counter_stat' => $counters];
+
+        return view('counter-user-select', $data);
+        
+    }
+    public function counter_selected(Request $request)
+    {
+
+        try{
+                //db start
+                DB::beginTransaction();
+            $female=request('femalecounter');
+            $male=request('malecounter');
+            $user = Auth::user();
+
+            $counter = ($male === null) ? $female : $male;
+
+            
+            $user_counter=UserCounter::where('user_id','=',$user->id)->first();
+
+            if($user_counter)
+            {
+                
+                DB::table('user_counters')
+                ->where('counter_id', '=', $counter)
+                ->update(['counter_id' => null]);
+
+                $user_counter->counter_id = $counter;
+                $user_counter->save();
+            }
+            else
+            {
+                DB::table('user_counters')
+                ->where('counter_id', '=', $counter)
+                ->update(['counter_id' => null]);
+
+                UserCounter::create([
+                    'counter_id' => $counter,
+                    'user_id' => $user->id,
+                    'crt_user' => $user->email,
+                ]);
+            }
+            DB::commit();
+            return redirect()->route('counter_user_token_call');
+        }
+        catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('counter_user_index');
+        }
+    }
+
+    public function counter_user_token_call()
+    {
+        
         $user = Auth::user();
 
         $counter_user = DB::table('counter_services')
@@ -47,6 +119,7 @@ class CounterUserController extends Controller
 
         return view('counter-user-page', $data);
     }
+
 
     public function counter_user_refreshcall()
     {
@@ -179,11 +252,11 @@ class CounterUserController extends Controller
             
             }
             DB::commit();
-            return redirect()->route('counter_user_index');
+            return redirect()->route('counter_user_token_call');
         }
         catch (Exception $e) {
             DB::rollBack();
-            return redirect()->route('counter_user_index');
+            return redirect()->route('counter_user_token_call');
         }
         
     }
@@ -236,41 +309,10 @@ class CounterUserController extends Controller
             ->where('id', $id)
             ->update(['is_closed' => '1']);
         
-        return redirect()->route('counter_user_index');
+        return redirect()->route('counter_user_token_call');
 
     }
-    public function counter_activate(Request $request, $ativate)
-    {
-        $user = Auth::user();
-        
-        $counter_user = DB::table('counter_services')
-        ->select('counters.id')
-        ->join('counters', 'counter_services.counter_id', '=', 'counters.id')
-        ->join('user_counters', 'user_counters.counter_id', '=', 'counters.id')
-        ->join('users', 'users.id', '=', 'user_counters.user_id')
-        ->join('services', 'counter_services.service_id', '=', 'services.id')
-        ->where('users.id', '=', $user->id)
-        ->first();
-        
-        $counter_id=$counter_user->id;
-        
-        if($ativate=="activate")
-        {
-            DB::table('counters')
-            ->where('id', $counter_id)
-            ->update(['is_active' => '1']);
-        }
-        if($ativate=="inactivate")
-        {
-            DB::table('counters')
-            ->where('id', $counter_id)
-            ->update(['is_active' => '0']);
-        }
-        return redirect()->route('counter_user_index');
-    }
-
-
-
+   
     public function counter_token_call(Request $request)
     {
 
@@ -486,10 +528,11 @@ class CounterUserController extends Controller
         catch (Exception $e) {
             // Rollback the transaction if an error occurs
             DB::rollBack();
-            return redirect()->route('counter_user_index');
+            return redirect()->route('counter_user_token_call');
         }
 
     }
+
 
 
     }
