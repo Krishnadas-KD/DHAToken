@@ -17,7 +17,6 @@
                         <div class="card-title" style="display: inline-block; margin-right: 30px; font-size:20px;">User Type: {{ $counter_user->type }}</div>
                         <div class="card-title" style="display: inline-block; margin-right: 30px; font-size:20px;"> Counter Name: {{ $counter_user->counter_name }}</div>
                         <div class="card-title" style="display: inline-block; margin-right: 0px; font-size:20px;">Service: {{ $counter_user->service_name }}</div>
-                        
                     </div>
                     @else
                          Counter not Assigned
@@ -65,28 +64,43 @@
 
 
 <div class="row">
+
     <div class="col-lg-6 equel-grid">
         <div class="grid" >
             <p class="grid-header">Token List  <span style=" float: right;" id="total_pendingCount">Total Pending:</span></p>
             <div class="grid-body" style="overflow-y: auto;max-height: 500px;">
-                <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));" id='token_list'>
+                <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));" id='token_list'>
                     
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-6 equel-grid">
+    <div class="col-lg-6">
+
+    <div class="grid" >
+            <p class="grid-header">Priority token <span style=" float: right;" id="priority_pendingcount">Total Count:</span></p>
+            <div class="grid-body" style="overflow-y: auto;max-height: 200px;">
+                <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));"  id='priority_list'>
+                    
+                </div>
+            </div>
+        </div>
+
         <div class="grid" >
             <p class="grid-header">Hold List  <span style=" float: right;" id="hold_pendingCount">Total Count:</span></p>
-            <div class="grid-body" style="overflow-y: auto;max-height: 500px;">
-                <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));"  id='hold_list'>
+            <div class="grid-body" style="overflow-y: auto;max-height: 200px;">
+                <div class="item-wrapper grid-container" style="grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));"  id='hold_list'>
                     
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+
+
+
 
 </div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="regModalLabel"
@@ -168,6 +182,8 @@
         background-color: #d5f9fa;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         border: 2px solid #000;
+        width: 130px;
+        height:50px
 
     }
     
@@ -252,8 +268,11 @@
         });
         
         $('#regNext').click(function() {
-            var loader = $('#loader');
-            loader.toggleClass('d-none');
+            if ($('input[name="xray"]').is(':checked'))
+            {    
+                var loader = $('#loader');
+                loader.toggleClass('d-none');
+            }
         });
 
 
@@ -338,28 +357,33 @@
                     {   
                         $("#token_list").html("");
                         $('#hold_list').html("");
+                        $('#priority_list').html("");
                         var total_pendingCount=0;
                         var hold_pendingCount=0;
+                        var priority_pendingCount=0;
                        for (var j = 0; j < response.data.queue_token.length; j++) {
                                 var cardDetails=response.data.queue_token[j];
                                 var div = $('<a>').addClass('custom-link');
                                 var card = $('<div>').addClass('card');
                                 card.attr('name', 'retoken');
                                 card.attr('value', cardDetails.id);
-                                var cardBody = $('<div>').addClass('card-body').css({'padding':'0 10px 0 10px'});
-                                var cardTitle = $('<h4>').css({'text-align':'center','font-size':'20px'});
-                                var tokenDetails2=$('<p>').css({'text-align':'center','font-size':'14px'});
-                                var tokenStatus=$('<p>').addClass('card-text').css({'text-align':'center','font-size':'13px'});
+                                var cardBody = $('<div>').addClass('card-body').css({'padding':'5px 7px 0 10px','user-select': 'none'});
+                                var cardTitle = $('<h5>').css({'text-align':'center','font-size':'15px'});
+                                var tokenDetails2=$('<p>').css({'text-align':'center','font-size':'12px'});
                                 var tokenHead = $('<b>');
                                 var tokenHead2 = $('<b>');
                                 var tokenHead3 = $('<b>');
                                 cardTitle.append(tokenHead.text('Token: '),' '+cardDetails.token_name+'');
-                                tokenDetails2.append(tokenHead3.text('Type: '),' '+cardDetails.section+'');
-                                tokenStatus.append((cardDetails.token_status));
-                                cardBody.append(cardTitle,tokenDetails2,tokenStatus);
+                                tokenDetails2.append(tokenHead3.text('Type: '),' '+cardDetails.type+'');
+                                cardBody.append(cardTitle,tokenDetails2);
                                 card.append(cardBody);
                                 div.append(card);
-                                if(cardDetails.closed === 0)
+                                if(cardDetails.closed === 0 && cardDetails.type==='PRIORITY')
+                                {
+                                    priority_pendingCount+=1;
+                                    $('#priority_list').append(div);
+                                }
+                                else if(cardDetails.closed === 0 )
                                 {
                                     total_pendingCount+=1;
                                     $('#token_list').append(div);
@@ -368,11 +392,11 @@
                                 {
                                     hold_pendingCount+=1;
                                     $('#hold_list').append(div);
-                                }
-                                
+                                } 
                        }
                        $("#total_pendingCount").text('Total Pending : '+total_pendingCount)
                        $("#hold_pendingCount").text('Total Count : '+hold_pendingCount)
+                       $("#priority_pendingcount").text('Total Count : '+priority_pendingCount)
                     }
                     select_call();
                 },

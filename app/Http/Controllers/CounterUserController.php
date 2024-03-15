@@ -58,16 +58,17 @@ class CounterUserController extends Controller
                 DB::table('user_counters')
                 ->where('counter_id', '=', $counter)
                 ->update(['counter_id' => null]);
-
-                $user_counter->counter_id = $counter;
-                $user_counter->save();
+                
+                DB::table('user_counters')
+                ->where('user_id', '=', $user_counter->user_id)
+                ->update(['counter_id' => $counter]);
+    
             }
             else
             {
                 DB::table('user_counters')
                 ->where('counter_id', '=', $counter)
                 ->update(['counter_id' => null]);
-
                 UserCounter::create([
                     'counter_id' => $counter,
                     'user_id' => $user->id,
@@ -414,18 +415,12 @@ class CounterUserController extends Controller
             ->where('token_status', '=', "Pending ".$counter_user->service_name)
             ->where('closed', '!=', '1')
             ->orderBy('last_updated', 'asc')->orderBy('token_name', 'asc')->get();
-            $totalCount = TokenDetails::select('id')
-            ->where('section', '=', $counter_user->counter_section)
-            ->where('token_status', '=', "Pending ".$counter_user->service_name)
-            ->where('closed', '=', '0')
-            ->count();
         }
         else
         {
             $queue_token=null;
-            $totalCount=null;
         }
-        $data = ['queue_token'=>$queue_token,'total_count'=>$totalCount];
+        $data = ['queue_token'=>$queue_token];
         return response()->json(['message' => 'Success', 'data' => $data]);
     }
 

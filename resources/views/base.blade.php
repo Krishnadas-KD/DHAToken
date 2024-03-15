@@ -127,12 +127,12 @@
               <i class="mdi mdi-account link-icon"></i>
             </a>
           </li>
-          <li>
+          <!-- <li>
              <a href="{{ route('assign_user') }}">
               <span class="link-title">Assign User</span>
               <i class="mdi mdi-account-network link-icon"></i>
             </a>
-          </li>
+          </li> -->
           <li>
              <a href="{{ route('auto_mail_home') }}">
               <span class="link-title">Auto Mail</span>

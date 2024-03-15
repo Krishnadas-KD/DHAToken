@@ -40,7 +40,7 @@ class DisplayController extends Controller
             
             $status = "Pending " . $service;
 
-            $pending_token =  DB::table('token_details')->select('id', 'token_name', 'type', 'section', 'token_status','created_at')
+            $pending_token =  DB::table('token_details')->select( 'token_name', 'type', 'section', 'token_status','created_at')
             ->selectRaw('COALESCE((SELECT MAX(created_at) FROM token_workflows WHERE token_id = token_details.id), created_at) AS last_updated')
             ->where('section', '=',$section)
             ->where('token_status', '=', $status)

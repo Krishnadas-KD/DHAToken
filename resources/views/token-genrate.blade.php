@@ -4,9 +4,6 @@
     Counters
 @endsection('title')
 @section('content')
-
-
-
 <div class="content">
     <div class="row" >
         <div class="col-lg-4 equel-grid">
@@ -151,7 +148,9 @@
     }
     .counter-type select option {
         display: inline-block;
-        background-color:#141881 ;
+        background-color:#696FFB ;
+        
+        border: 1px solid;
         padding: 10px;
         margin: 10px;
         font-weight: bold;
@@ -162,17 +161,17 @@
 
     }
     .counter-type select option:checked {
-    background-color: #1867d3;
+        background: #1dd21d !important;
+        border-color:#696FFB ;
+        box-shadow: 0 0 10px 100px #1dd21d inset;
     }
-  
-
+    
     
     </style>
 @stop
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 
 <script>
     $(document).ready(function() {

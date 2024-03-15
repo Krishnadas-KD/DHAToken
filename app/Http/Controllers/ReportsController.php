@@ -80,14 +80,11 @@ class ReportsController extends Controller
         ->get();
 
         return DataTables::of($data)
-        ->editColumn('created_at', function ($row) {
-        // Format the 'created_at' column
-        return Carbon::parse($row->created_at)->format('Y-m-d H:i:s');
-    })
-    ->editColumn('updated_at', function ($row) {
-        // Format the 'updated_at' column
-        return Carbon::parse($row->updated_at)->format('Y-m-d H:i:s');
-    })->make(true);
+        ->editColumn('created_at', function ($row) { return Carbon::parse($row->created_at)->format('Y-m-d H:i:s'); })
+        ->editColumn('updated_at', function ($row) { return Carbon::parse($row->updated_at)->format('Y-m-d H:i:s'); })
+        ->make(true);
+
+    
     }
    
     public function token_count_hour_home(Request $request)
