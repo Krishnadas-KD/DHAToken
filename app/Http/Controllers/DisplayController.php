@@ -58,6 +58,7 @@ class DisplayController extends Controller
     public function display_route(Request $request, $service,$section)
     {
         $url='/display-get/'.$service.'/'.$section;
+        $service= $service==='Registration' ? "CHECK IN" : $service; 
         $data = [
             'ajxa_url'=>$url,
             'service'=>$service

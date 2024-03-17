@@ -33,14 +33,11 @@ class TokenController extends Controller
         ->first();
         
         if ($qry) {
-            if ($qry->current_sq%60===0 &&$qry->current_sq>0)
-            {
-                $random_number = rand(10, 100);
-            }
-            $next_series = $qry->abbr . ($qry->current_sq+1 +($random_number));
+            
+            $next_series = $qry->abbr . ($qry->current_sq+1 );
             TokenSeries::where('abbr', $qry->abbr)
             ->where('section', $qry->section)
-            ->update(['current_sq' => $qry->current_sq+1 +($random_number)]);
+            ->update(['current_sq' => $qry->current_sq+1 ]);
         } else {
             $next_series = null;
         }
