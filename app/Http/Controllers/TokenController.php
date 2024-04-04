@@ -24,7 +24,6 @@ class TokenController extends Controller
     public function token_create(Request $request)
     {
         $user = Auth::user();
-        $random_number = 0;
 
         $type=request('type');
         $section=request('section');
@@ -33,7 +32,6 @@ class TokenController extends Controller
         ->first();
         
         if ($qry) {
-            
             $next_series = $qry->abbr . ($qry->current_sq+1 );
             TokenSeries::where('abbr', $qry->abbr)
             ->where('section', $qry->section)

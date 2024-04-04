@@ -17,4 +17,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-dha v1.8.zip
+.env.example
+.env.local

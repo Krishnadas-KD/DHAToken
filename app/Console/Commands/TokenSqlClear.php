@@ -49,7 +49,6 @@ class TokenSqlClear extends Command
             $random_number = rand(100, 300);
             DB::table('token_series')->update(['current_sq' => $random_number]);
             info( "Toekn Clear Sucess ");   
-            
         } catch (Exception $e) {
            
             info( "Caught an exception: " . $e->getMessage());

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Medical Fitness Center</title>
   <!-- Include Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body, html {
       height: 100%;
@@ -27,11 +28,15 @@
       height: 100%;
     }
     .cardheader {
-      padding: 20px 5px 20px 5px;
+      border-radius: 10px;
+
+      padding: 5px;
+      padding-top: 20px;
+      padding-bottom: 20px;
       margin-top: 2px;
       height: 100%;
       color:#fff;
-      text-shadow: 2px 2px 4px #000;
+      text-shadow: 2px 2px 4px #000000;
       text-align:center;
     }
     .cardheader h1 {
@@ -55,6 +60,7 @@
       border: 3px solid #000;
       background-color: #1441654a;
       height: 97%;
+      display: flex;
       text-align:center;
       display: flex;
       align-items: center;
@@ -142,12 +148,13 @@
 .carheaderpending span{
   font-size:2vw;
 }
+
    
   </style>
-  
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 
 
 </head>
@@ -157,7 +164,11 @@
     <div class="row" style="margin-bottom: 15px;">
       <div class="col" style="padding-right:5px;padding-left:5px;">
         <div class="cardheader">
-          <h1>    {{ strtoupper($service) }}</h1>
+          <h1>@if(strtoupper($service) === 'REGISTRATION')
+    CHECK IN
+@else
+    {{ strtoupper($service) }}
+@endif</h1>
         </div>      
       </div>
     </div>
@@ -180,7 +191,10 @@
           <span>WAITING LIST</span>
         </div>      
 
+
+
           <div id="pendingToken" class="row row-cols-1 row-cols-sm-2 row-cols-md-4"  style="padding:10px 10px 10px 10px;">
+
        
             </div>
          </div>
@@ -215,14 +229,26 @@
               if(counters[j].type==='display' && counters[j].token!=null)
               {
                   counters[j].type='old';
-                
+                  //   if ('speechSynthesis' in window) {
+                  //     var msg = new SpeechSynthesisUtterance();
+                  //       var voices = window.speechSynthesis.getVoices();
+                  //       if (voices && voices.length > 0) {
+                  //           msg.voice = voices[0]; 
+                  //           msg.text = 'TOKEN '+counters[j].token+' PLEASE PROCEED TO COUNTER '+ counters[j].counter;
+                  //           window.speechSynthesis.speak(msg);
+                  //       }
+                       
+                  // } else {
+                  //     console.error('Speech synthesis not supported');
+                  // }
+                  
                  break;
               }
            }
 
 
         }
-        var  intervalId=setInterval(swapText, 5000); 
+        var  intervalId=setInterval(swapText, 5000); // Swap text every 5 seconds (5000 milliseconds)
         function refresh() {
             $.ajax({
                 url: '{{$ajxa_url}}',
