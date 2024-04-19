@@ -31,7 +31,10 @@ Route::get('/display', [DisplayController::class, 'index'])->name('index');
 Route::get('/display-get/{service}/{section}', [DisplayController::class, 'display_ajax'])->name('display_ajax');
 Route::get('/display-route/{service}/{section}', [DisplayController::class, 'display_route'])->name('display_route');
 
-Route::get('/', function () {return redirect('/login');});
+Route::get('/', function () {   return redirect('/login');});
+
+Route::get('/tok_call', function () {  event(new \App\Events\TokenDisplay);});
+
 
 //admin url
 Route::group(['middleware' => ['is_admin', 'auth']], function () {

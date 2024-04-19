@@ -4,6 +4,8 @@
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+
+
 import axios from 'axios';
 window.axios = axios;
 
@@ -15,10 +17,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
+import Echo from 'laravel-echo';
+import { forEach } from 'lodash';
 
-// import Pusher from 'pusher-js';
-// window.Pusher = Pusher;
+import Pusher from 'pusher-js';
+window.Pusher = Pusher;
 
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
@@ -30,3 +33,27 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+
+
+console.log("jia");
+
+
+for (const key in process.env) {
+    console.log(`${key}: ${process.env[key]}`);
+    if (Object.hasOwnProperty.call(process.env, key)) {
+        console.log(`${key}: ${process.env[key]}`);
+    }
+}
+
+console.log(process.env);
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    encrypted: false,
+    forceTLS: false,
+    enabledTransports: ['ws', 'wss'],
+});

@@ -68,6 +68,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
 <script>
  $(document).ready(function(){
     var formattedDate = new Date().toISOString().slice(0,10);
