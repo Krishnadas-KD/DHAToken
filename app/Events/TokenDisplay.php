@@ -13,15 +13,17 @@ use Illuminate\Queue\SerializesModels;
 class TokenDisplay implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public $message;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $message)
     {
-        //
+        
+        $this->message = $message;
+        
     }
 
     /**
@@ -31,7 +33,7 @@ class TokenDisplay implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('token.display.socket');
+        return new Channel('token.display');
     }
     public function broadcastAs()
     {
@@ -39,6 +41,9 @@ class TokenDisplay implements ShouldBroadcast
     }
     public function broadcastWith()
     {
-        return ['hi'=>123];
+
+        return [
+            'message'=>$this->message
+        ];
     }
 }
