@@ -12,6 +12,10 @@ use App\Http\Controllers\{
     AutomailController,
     ChartController
 };
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
