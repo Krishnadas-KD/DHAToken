@@ -11,14 +11,14 @@
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.0.4",
-        "axios": "^0.21",
+        "axios": "^1.6.8",
+        "laravel-echo": "^1.16.1",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "postcss": "^8.1.14",
+        "pusher-js": "^8.4.0-rc2"
     },
     "dependencies": {
-        "dotenv": "^16.4.5",
-        "laravel-echo": "^1.16.1",
-        "pusher-js": "^8.4.0-rc2"
+        "dotenv": "^16.4.5"
     }
 }
