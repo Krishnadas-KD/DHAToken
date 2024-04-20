@@ -26,6 +26,8 @@ use App\Http\Controllers\{
 
 
 
+
+
 Auth::routes();
 
 //Open url
