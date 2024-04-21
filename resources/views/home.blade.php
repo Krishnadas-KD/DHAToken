@@ -59,7 +59,7 @@
     <main role="main" class="flex-shrink-0 mt-5">
         <div class="container">
             <div class="jumbotron">
-            <button type="button" id="clickme"> hi</button>
+
                 <div class="row mb-5 d-flex justify-content-center">
                     <h3 class="h3 Blood">Token Displays</h3>
                 </div>
@@ -103,14 +103,4 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
       <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
     </body>
-   
-    <script>
-    window.env = {
-        VITE_PUSHER_APP_KEY: '{{ env('VITE_PUSHER_APP_KEY') }}',
-        VITE_PUSHER_APP_CLUSTER: '{{ env('VITE_PUSHER_APP_CLUSTER') }}',
-        // Add other variables here if needed
-    };
-</script>
-
- <script src="{{ mix('js/app.js') }}"></script>
 </html>

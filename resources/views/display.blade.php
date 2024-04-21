@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Medical Fitness Center</title>
   <!-- Include Bootstrap CSS -->
+  
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body, html {
@@ -380,6 +381,8 @@
         setInterval(refresh, 5000); // 5000 milliseconds = 5 seconds
     });
   </script>
+
+<script src="{{ mix('js/appReceive.js') }}"></script>
 
 
  <!--  -->

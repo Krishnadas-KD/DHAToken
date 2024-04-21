@@ -35,10 +35,13 @@ class TokenDisplay implements ShouldBroadcast
     {
         return new Channel('token.display');
     }
+    
     public function broadcastAs()
     {
         return 'display';
     }
+
+
     public function broadcastWith()
     {
 

@@ -11,6 +11,8 @@
                 <p class="grid-header">New Token</p>
                 <div class="grid-body">
                     <div class="item-wrapper">
+
+                    <button type="button" id="clickme"> hi</button>
                         <form id="token_male">
                         @csrf  
                                 <label for="counter_type">Counter Type</label>
@@ -172,6 +174,10 @@
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script src="{{ mix('js/appSend.js') }}"></script>
+
+<script src="{{ mix('js/appReceive.js') }}"></script>
+
 
 <script>
     $(document).ready(function() {

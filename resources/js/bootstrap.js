@@ -5,7 +5,6 @@
  */
 
 
-
 import axios from 'axios';
 window.axios = axios;
 
@@ -24,13 +23,12 @@ window.Pusher = Pusher;
 
 
 
-
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: window.env.VITE_PUSHER_APP_KEY,
-    cluster: window.env.VITE_PUSHER_APP_CLUSTER,
-    wsHost: window.location.hostname,
-    wsPort: 6001,
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    wsHost: process.env.MIX_PUSHER_HOST,
+    wsPort:process.env.MIX_PUSHER_PORT,
     encrypted: false,
     forceTLS: false,
     enabledTransports: ['ws', 'wss'],

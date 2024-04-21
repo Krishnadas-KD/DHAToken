@@ -12,11 +12,18 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+ require('dotenv').config();
 
+
+mix.js('resources/js/appReceive.js', 'public/js')
+    .js('resources/js/appSend.js', 'public/js')
+    .postCss('resources/css/app.css', 'public/css', []);
+    
+    if (!mix.inProduction()) {
+        mix.sourceMaps(); // Enable source maps for easier debugging
+    } else {
+        mix.version(); // Versioning for production assets
+    }
 
 mix.options({
     hmrOptions:{

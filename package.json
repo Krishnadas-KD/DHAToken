@@ -16,7 +16,11 @@
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
-        "pusher-js": "^8.4.0-rc2"
+        "pusher-js": "^8.4.0-rc2",
+        "resolve-url-loader": "^5.0.0",
+        "sass": "^1.75.0",
+        "sass-loader": "^12.1.0",
+        "vue-loader": "^16.2.0"
     },
     "dependencies": {
         "dotenv": "^16.4.5"
