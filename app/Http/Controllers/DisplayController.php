@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Counter;
+use App\Models\CounterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,8 @@ class DisplayController extends Controller
     }
     public function display_route(Request $request, $service,$section)
     {
+
+       
         $url='/display-get/'.$service.'/'.$section;
         $data = [
             'ajxa_url'=>$url,
