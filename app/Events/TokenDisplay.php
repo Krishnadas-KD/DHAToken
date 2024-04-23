@@ -17,19 +17,21 @@ use App\Models\TokenDetails;
 class TokenDisplay implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $message;
+    public $service,$section;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(string $message)
+    public function __construct(string $service,string $section)
     {
         
-        $this->message = $message;
+        $this->service = $service;
+        $this->section = $section;
         
     }
 
+    
     /**
      * Get the channels the event should broadcast on.
      *
@@ -37,6 +39,31 @@ class TokenDisplay implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+        if($this->service==="Registration" && $this->section==="MALE")
+        {
+            return new Channel('token.display.male.registration');
+        }
+        if($this->service==="Blood Collection" && $this->section==="MALE")
+        {
+            return new Channel('token.display.male.blood');
+        }
+        if($this->service==="X-Ray" && $this->section==="MALE")
+        {
+            return new Channel('token.display.male.xray');
+        }
+        
+        if($this->service==="Registration" && $this->section==="FEMALE")
+        {
+            return new Channel('token.display.female.registration');
+        }
+        if($this->service==="Blood Collection" && $this->section==="FEMALE")
+        {
+            return new Channel('token.display.female.blood');
+        }
+        if($this->service==="X-Ray" && $this->section==="FEMALE")
+        {
+            return new Channel('token.display.female.xray');
+        }
         return new Channel('token.display');
     }
     
@@ -48,12 +75,12 @@ class TokenDisplay implements ShouldBroadcast
 
     public function broadcastWith()
     {
-
-        $service='Registration';
-        $section='MALE';
-        $status='Pending Registration';
+        
+        $service=$this->service;
+        $section=$this->section;
+        $status='Pending '.$service;
         try{
-            $tokenStatus = CounterService::select('counters.counter_name', 'token_workflows.token_name', 'token_workflows.section')
+            $tokenStatus = CounterService::select('counters.counter_name', 'token_workflows.token_name')
             ->join('counters', 'counters.id', '=', 'counter_services.counter_id')
             ->leftJoin('token_workflows', function ($join) use ($service, $section) {
                 $join->on('token_workflows.counter_number', '=', 'counters.counter_number')
@@ -67,7 +94,7 @@ class TokenDisplay implements ShouldBroadcast
             ->orderBy('counters.counter_name')
             ->get();
 
-            $pendingToken = TokenDetails::select('token_name', 'type', 'section', 'token_status', 'created_at')
+            $pendingToken = TokenDetails::select('token_name')
             ->selectRaw('COALESCE((SELECT MAX(created_at) FROM token_workflows WHERE token_id = token_details.id), created_at) AS last_updated')
             ->where('section', '=', $section)
             ->where('token_status', '=', $status)

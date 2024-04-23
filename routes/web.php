@@ -38,11 +38,15 @@ Route::get('/display-route/{service}/{section}', [DisplayController::class, 'dis
 
 Route::get('/', function () {   return redirect('/login');});
 
-Route::get('/tok_call', function () {  event(new \App\Events\TokenDisplay);});
 
-Route::post('/clicked-button', function (\Illuminate\Http\Request $request) {
-      event(new \App\Events\TokenDisplay($request->message));
-     return null;
+Route::post('/clicked-button', function () {
+    Event::dispatch(new \App\Events\TokenDisplay("Registration", "MALE"));
+    Event::dispatch(new \App\Events\TokenDisplay("Blood Collection", "MALE"));
+    Event::dispatch(new \App\Events\TokenDisplay("X-Ray", "MALE"));
+    Event::dispatch(new \App\Events\TokenDisplay("Registration", "FEMALE"));
+    Event::dispatch(new \App\Events\TokenDisplay("Blood Collection", "FEMALE"));
+    Event::dispatch(new \App\Events\TokenDisplay("X-Ray", "FEMALE"));
+    return 200;
     });
 
 
